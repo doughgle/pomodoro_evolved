@@ -1,53 +1,14 @@
 import unittest
 from time import sleep
-from threading import Timer as TTimer
-
-running = "running"
-stopped = "stopped"
-timeup = "timeup"
-
-class NotRunningError(Exception): pass
-class AlreadyRunningError(Exception): pass
-    
-class Timer(object):
-    
-    def __init__(self):
-        self.state = stopped        
-            
-    def start(self, duration=1, whenTimeup=None):
-        if self.state == running:
-            raise AlreadyRunningError    
-        else:
-            self._timer = TTimer(duration, self._whenTimeup)
-            self._timer.start()            
-            self.state = running            
-            self._userWhenTimeup = whenTimeup
-    
-    def _whenTimeup(self):
-        self.state = timeup
-        if callable(self._userWhenTimeup):
-            self._userWhenTimeup()    
-    
-    def stop(self):
-        if self.state == running:
-            self.state = stopped
-        else:
-            raise NotRunningError()
-            
-    def isTimeup(self):
-        if self.state == timeup:
-            return True
-        else:
-            return False
-    
+from kitchen_timer import Timer, NotRunningError, AlreadyRunningError    
     
 class TestTimer(unittest.TestCase):
 
     def assertRunning(self):
-        return self.assertEqual(running, self.timer.state)
+        return self.assertEqual(Timer.running, self.timer.state)
 
     def assertStopped(self):
-        return self.assertEqual(stopped, self.timer.state)
+        return self.assertEqual(Timer.stopped, self.timer.state)
 
     def whenTimeup(self):
         self.timeupCalled = True
@@ -107,6 +68,12 @@ class TestTimer(unittest.TestCase):
         self.timer.start()
         self.timer.stop()
         self.assertStopped()
+        
+    def test_timeRemainingWhenTimeupIsZero(self):
+        self.timer.start(duration=0.01)
+        while not self.timer.isTimeup():
+            pass
+        self.assertEqual(0, self.timer.timeRemaining)
 
 
 if __name__ == "__main__":
