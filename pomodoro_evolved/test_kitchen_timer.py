@@ -8,6 +8,7 @@ stopped = "stopped"
 timeup = "timeup"
 
 class NotRunningError(Exception): pass
+class AlreadyRunningError(Exception): pass
     
 class Timer(object):
     
@@ -15,11 +16,13 @@ class Timer(object):
         self.state = idle        
             
     def start(self, duration=1, whenTimeup=None):
-        if self.state == idle:
+        if self.state == idle or self.state == timeup or self.state == stopped:
             self._timer = TTimer(duration, self._whenTimeup)
             self._timer.start()            
             self.state = running            
             self._userWhenTimeup = whenTimeup
+        elif self.state == running:
+            raise AlreadyRunningError    
     
     def _whenTimeup(self):
         self.state = timeup
@@ -69,6 +72,10 @@ class TestTimer(unittest.TestCase):
     def test_afterStartingFromIdle_TimerIsRunning(self):
         self.timer.start()
         self.assertRunning()
+        
+    def test_startingWhileRunning_isAAlreadyRunningError(self):
+        self.timer.start(duration=3)
+        self.assertRaises(AlreadyRunningError, self.timer.start)
     
     def test_afterStarting_timeupIsFalseWhileRunning(self):
         self.timer.start(duration=3)
@@ -83,7 +90,26 @@ class TestTimer(unittest.TestCase):
         self.timeupCalled = False
         self.timer.start(duration=0.05, whenTimeup=self.whenTimeup)
         sleep(0.1)
-        self.assertTrue(self.timeupCalled)    
+        self.assertTrue(self.timeupCalled)
+        
+    def test_startingWhenTimeupRestartsTheTimer(self):
+        self.timer.start(duration=0.05)
+        while not self.timer.isTimeup():
+            pass
+        self.timer.start()
+        self.assertRunning()
+        
+    def test_stoppingWhenTimeup_isNotRunningError(self):
+        self.timer.start(duration=0.05)
+        while not self.timer.isTimeup():
+            pass
+        self.assertRaises(NotRunningError, self.timer.stop)
+        
+    def test_startingWhenStoppedRestartsTheTimer(self):
+        self.timer.start()
+        self.timer.stop()        
+        self.timer.start()
+        self.assertRunning()
         
     def test_resettingFromIdle_DoesNothing(self):
         self.timer.reset()
