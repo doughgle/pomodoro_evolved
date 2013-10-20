@@ -4,6 +4,11 @@ from kitchen_timer import Timer, NotRunningError, AlreadyRunningError
     
 class TestTimer(unittest.TestCase):
 
+    def waitForTimeup(self):
+        while not self.timer.isTimeup():
+            pass
+
+
     def assertRunning(self):
         return self.assertEqual(Timer.running, self.timer.state)
 
@@ -47,15 +52,13 @@ class TestTimer(unittest.TestCase):
         
     def test_startingWhenTimeupRestartsTheTimer(self):
         self.timer.start(duration=0.05)
-        while not self.timer.isTimeup():
-            pass
+        self.waitForTimeup()
         self.timer.start()
         self.assertRunning()
         
     def test_stoppingWhenTimeup_isNotRunningError(self):
         self.timer.start(duration=0.05)
-        while not self.timer.isTimeup():
-            pass
+        self.waitForTimeup()
         self.assertRaises(NotRunningError, self.timer.stop)
         
     def test_startingWhenStoppedRestartsTheTimer(self):
@@ -71,9 +74,16 @@ class TestTimer(unittest.TestCase):
         
     def test_timeRemainingWhenTimeupIsZero(self):
         self.timer.start(duration=0.01)
-        while not self.timer.isTimeup():
-            pass
+        self.waitForTimeup()
         self.assertEqual(0, self.timer.timeRemaining)
+        
+    def test_timeRemainingWhenStoppedIsAccurateToOneSecond(self):
+        elapsed=1
+        for duration in (5, 10, 60):            
+            self.timer.start(duration)
+            sleep(elapsed)
+            self.timer.stop()
+            self.assertEqual((duration - elapsed), self.timer.timeRemaining)
 
 
 if __name__ == "__main__":

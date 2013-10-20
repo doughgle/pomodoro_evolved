@@ -1,5 +1,5 @@
 from threading import Timer as TTimer
-
+from time import time
 
 class NotRunningError(Exception): pass
 class AlreadyRunningError(Exception): pass
@@ -13,11 +13,14 @@ class Timer(object):
     
     def __init__(self):
         self.state = self.stopped        
+        self.timeRemaining = 0
             
     def start(self, duration=1, whenTimeup=None):
         if self.state == self.running:
             raise AlreadyRunningError    
         else:
+            self.timeRemaining = duration
+            self._startTime = self._now()
             self._timer = TTimer(duration, self._whenTimeup)
             self._timer.start()            
             self.state = self.running            
@@ -26,6 +29,7 @@ class Timer(object):
     def stop(self):
         if self.state == self.running:
             self.state = self.stopped
+            self.timeRemaining -= self._elapsedTime()
         else:
             raise NotRunningError()
             
@@ -41,3 +45,9 @@ class Timer(object):
         if callable(self._userWhenTimeup):
             self._userWhenTimeup()    
         
+    def _now(self):
+        return round(time())
+    
+    def _elapsedTime(self):
+        return self._now() - self._startTime
+
