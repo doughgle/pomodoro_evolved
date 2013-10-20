@@ -16,13 +16,13 @@ class Timer(object):
         self.state = idle        
             
     def start(self, duration=1, whenTimeup=None):
-        if self.state == idle or self.state == timeup or self.state == stopped:
+        if self.state == running:
+            raise AlreadyRunningError    
+        else:
             self._timer = TTimer(duration, self._whenTimeup)
             self._timer.start()            
             self.state = running            
             self._userWhenTimeup = whenTimeup
-        elif self.state == running:
-            raise AlreadyRunningError    
     
     def _whenTimeup(self):
         self.state = timeup
@@ -39,10 +39,7 @@ class Timer(object):
         if self.state == timeup:
             return True
         else:
-            return False 
-            
-    def reset(self):
-        pass
+            return False
     
     
 class TestTimer(unittest.TestCase):
@@ -110,10 +107,6 @@ class TestTimer(unittest.TestCase):
         self.timer.stop()        
         self.timer.start()
         self.assertRunning()
-        
-    def test_resettingFromIdle_DoesNothing(self):
-        self.timer.reset()
-        self.assertIdle()
                 
     def test_afterStoppingARunningTimer_timerIsStopped(self):
         self.timer.start()
