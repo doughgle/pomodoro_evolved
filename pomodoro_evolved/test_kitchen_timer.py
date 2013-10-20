@@ -16,28 +16,29 @@ limitations under the License.
 
 import unittest
 from time import sleep
-from kitchen_timer import Timer, NotRunningError, AlreadyRunningError    
+from kitchen_timer import KitchenTimer, NotRunningError, AlreadyRunningError    
 
 DEFAULT_TEST_DURATION = 0.01
 ENOUGH_TIME_TO_EXPIRE = DEFAULT_TEST_DURATION * 2
 
-class TestTimer(unittest.TestCase):
+class TestKitchenTimer(unittest.TestCase):
+    '''Unit tests for Kitchen Timer class.'''
 
     def waitForTimeup(self):
         while not self.timer.isTimeup():
             pass
 
     def assertRunning(self):
-        return self.assertEqual(Timer.running, self.timer.state)
+        return self.assertEqual(KitchenTimer.running, self.timer.state)
 
     def assertStopped(self):
-        return self.assertEqual(Timer.stopped, self.timer.state)
+        return self.assertEqual(KitchenTimer.stopped, self.timer.state)
 
     def whenTimeup(self):
         self.timeupCalled = True
         
     def setUp(self):        
-        self.timer = Timer()        
+        self.timer = KitchenTimer()        
 
     def test_afterInitialisation_TimerIsStopped(self):
         self.assertStopped()

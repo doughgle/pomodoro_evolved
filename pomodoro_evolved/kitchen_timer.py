@@ -21,7 +21,13 @@ class NotRunningError(Exception): pass
 class AlreadyRunningError(Exception): pass
 
 
-class Timer(object):
+class KitchenTimer(object):
+    '''
+    Loosely models a clockwork kitchen timer with the following differences:
+        You can start the timer with arbitrary duration (e.g. 1.2 seconds).
+        The timer calls back a given function when time's up.
+        Querying the time remaining has 0.1 second accuracy.
+    '''
     
     running = "running"
     stopped = "stopped"
