@@ -9,7 +9,7 @@ class Timer(object):
     
     running = "running"
     stopped = "stopped"
-    timeup = "timeup"
+    timeup =  "timeup"
     
     def __init__(self):
         self.state = self.stopped        
@@ -19,7 +19,7 @@ class Timer(object):
         if self.state == self.running:
             raise AlreadyRunningError    
         else:
-            self.timeRemaining = duration
+            self.timeRemaining = round(duration, 1)
             self._startTime = self._now()
             self._timer = TTimer(duration, self._whenTimeup)
             self._timer.start()            
@@ -29,7 +29,7 @@ class Timer(object):
     def stop(self):
         if self.state == self.running:
             self.state = self.stopped
-            self.timeRemaining -= self._elapsedTime()
+            self.timeRemaining -= round(self._elapsedTime(), 1)
         else:
             raise NotRunningError()
             
@@ -46,7 +46,7 @@ class Timer(object):
             self._userWhenTimeup()    
         
     def _now(self):
-        return round(time())
+        return time()
     
     def _elapsedTime(self):
         return self._now() - self._startTime
