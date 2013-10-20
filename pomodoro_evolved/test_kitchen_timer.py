@@ -2,7 +2,6 @@ import unittest
 from time import sleep
 from threading import Timer as TTimer
 
-idle = "idle"
 running = "running"
 stopped = "stopped"
 timeup = "timeup"
@@ -13,7 +12,7 @@ class AlreadyRunningError(Exception): pass
 class Timer(object):
     
     def __init__(self):
-        self.state = idle        
+        self.state = stopped        
             
     def start(self, duration=1, whenTimeup=None):
         if self.state == running:
@@ -47,10 +46,6 @@ class TestTimer(unittest.TestCase):
     def assertRunning(self):
         return self.assertEqual(running, self.timer.state)
 
-
-    def assertIdle(self):
-        return self.assertEqual(idle, self.timer.state)
-
     def assertStopped(self):
         return self.assertEqual(stopped, self.timer.state)
 
@@ -60,13 +55,13 @@ class TestTimer(unittest.TestCase):
     def setUp(self):        
         self.timer = Timer()        
 
-    def test_afterInitialisation_TimerIsIdle(self):
-        self.assertIdle()
+    def test_afterInitialisation_TimerIsStopped(self):
+        self.assertStopped()
     
-    def test_stoppingWhenIdle_isANotRunningError(self):        
+    def test_stoppingWhenStopped_isANotRunningError(self):        
         self.assertRaises(NotRunningError, self.timer.stop)
             
-    def test_afterStartingFromIdle_TimerIsRunning(self):
+    def test_afterStarting_TimerIsRunning(self):
         self.timer.start()
         self.assertRunning()
         
