@@ -60,8 +60,8 @@ class TestTimer(unittest.TestCase):
         self.assertEqual(running, self.timer.state)
 
     def test_afterTimerExpires_StateIsTimeUp(self):
-        self.timer.start(duration=0.1)
-        sleep(0.2)
+        self.timer.start(duration=0.05)
+        sleep(0.1)
         self.assertTrue(self.timer.isTimeup())
     
     def test_afterStarting_timeupIsFalseUntilTimeup(self):
@@ -70,8 +70,8 @@ class TestTimer(unittest.TestCase):
     
     def test_timerCallsBackWhenTimeExpires(self):
         self.timeupCalled = False
-        self.timer.start(duration=0.1, whenTimeup=self.whenTimeup)
-        sleep(0.2)
+        self.timer.start(duration=0.05, whenTimeup=self.whenTimeup)
+        sleep(0.1)
         self.assertTrue(self.timeupCalled)
     
     def test_stoppingFromIdle_DoesNothing(self):
@@ -81,8 +81,7 @@ class TestTimer(unittest.TestCase):
     def test_resettingFromIdle_DoesNothing(self):
         self.timer.reset()
         self.assertIdle()
-        
-        
+                
     def test_afterStoppingARunningTimer_timerIsStopped(self):
         self.timer.start()
         self.timer.stop()
