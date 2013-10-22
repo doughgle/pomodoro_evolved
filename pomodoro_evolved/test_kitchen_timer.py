@@ -75,6 +75,13 @@ class TestKitchenTimer(unittest.TestCase):
         self.timer.stop()
         self.assertStopped()
         
+    def test_afterStopping_timerDoesNotCallback(self):
+        self.timeupCalled = False
+        self.timer.start(duration=DEFAULT_TEST_DURATION, whenTimeup=self.whenTimeup)
+        self.timer.stop()
+        sleep(ENOUGH_TIME_TO_EXPIRE)
+        self.assertFalse(self.timeupCalled)
+        
     def test_timeRemainingWhenTimeupIsZero(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         self.waitForTimeup()

@@ -34,6 +34,7 @@ class KitchenTimer(object):
         
     def stop(self):
         if self.state == self.running:
+            self._timer.cancel()
             self.state = self.stopped
             self.timeRemaining -= round(self._elapsedTime(), 1)
         else:
