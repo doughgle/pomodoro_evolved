@@ -1,5 +1,6 @@
 from threading import Timer as TTimer
 from time import time
+from threading import Lock
 
 class NotRunningError(Exception): pass
 class AlreadyRunningError(Exception): pass
@@ -19,7 +20,9 @@ class KitchenTimer(object):
     
     def __init__(self):
         self.state = self.stopped        
+        self.__timeRemainingLock = Lock()
         self.timeRemaining = 0
+        
             
     def start(self, duration=1, whenTimeup=None):
         if self.state == self.running:
@@ -45,6 +48,16 @@ class KitchenTimer(object):
             return True
         else:
             return False
+        
+    @property
+    def timeRemaining(self):
+        with self.__timeRemainingLock:
+            return self._timeRemaining
+    
+    @timeRemaining.setter
+    def timeRemaining(self, timeRemaining):
+        with self.__timeRemainingLock:
+            self._timeRemaining = timeRemaining
         
     def _whenTimeup(self):
         self.state = self.timeup
