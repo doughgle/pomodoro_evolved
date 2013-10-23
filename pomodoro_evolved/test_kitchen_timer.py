@@ -13,7 +13,7 @@ class TestKitchenTimer(unittest.TestCase):
             pass
 
     def assertRunning(self):
-        return self.assertEqual(KitchenTimer.running, self.timer.state)
+        return self.assertTrue(self.timer.isRunning())
 
     def assertStopped(self):
         return self.assertEqual(KitchenTimer.stopped, self.timer.state)
