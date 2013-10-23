@@ -14,7 +14,7 @@ class Pomodoro(object):
       b) You interrupt it.
     '''
     
-    def __init__(self, whenTimeup, durationInMins=1):
+    def __init__(self, whenTimeup, durationInMins=25):
         self.__isRunning = False
         self.__wasInterrupted = False
         self._whenTimeup = whenTimeup
