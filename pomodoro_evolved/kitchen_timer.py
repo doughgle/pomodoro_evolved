@@ -15,21 +15,21 @@ class KitchenTimer(object):
     '''
     
     PRECISION_NUM_DECIMAL_PLACES = 1
-    running = "running"
-    stopped = "stopped"
-    timeup =  "timeup"
+    RUNNING = "RUNNING"
+    STOPPED = "STOPPED"
+    TIMEUP =  "TIMEUP"
     
     def __init__(self):
         self.__stateLock = Lock()
         self.__timeRemainingLock = Lock()
-        self.state = self.stopped        
+        self.state = self.STOPPED        
         self.timeRemaining = 0
                     
     def start(self, duration=1, whenTimeup=None):
         if self.isRunning():
             raise AlreadyRunningError    
         else:
-            self.state = self.running            
+            self.state = self.RUNNING            
             self.timeRemaining = duration
             self._userWhenTimeup = whenTimeup
             self._startTime = self._now()
@@ -39,16 +39,16 @@ class KitchenTimer(object):
     def stop(self):
         if self.isRunning():
             self._timer.cancel()
-            self.state = self.stopped
+            self.state = self.STOPPED
             self.timeRemaining -= self._elapsedTime()
         else:
             raise NotRunningError()
 
     def isRunning(self):
-        return self.state == self.running
+        return self.state == self.RUNNING
                 
     def isTimeup(self):
-        return self.state == self.timeup
+        return self.state == self.TIMEUP
 
     @property
     def state(self):
@@ -73,7 +73,7 @@ class KitchenTimer(object):
             self._timeRemaining = timeRemaining
                     
     def _whenTimeup(self):
-        self.state = self.timeup
+        self.state = self.TIMEUP
         self.timeRemaining = 0
         if callable(self._userWhenTimeup):
             self._userWhenTimeup()    

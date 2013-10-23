@@ -16,7 +16,7 @@ class TestKitchenTimer(unittest.TestCase):
         return self.assertTrue(self.timer.isRunning())
 
     def assertStopped(self):
-        return self.assertEqual(KitchenTimer.stopped, self.timer.state)
+        return self.assertEqual(KitchenTimer.STOPPED, self.timer.state)
 
     def whenTimeup(self):
         self.timeupCalled = True
