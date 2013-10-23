@@ -82,6 +82,9 @@ class TestKitchenTimer(unittest.TestCase):
         sleep(ENOUGH_TIME_TO_EXPIRE)
         self.assertFalse(self.timeupCalled)
         
+    def test_afterInitialisation_timeRemainingIsZero(self):        
+        self.assertEqual(0, self.timer.timeRemaining)
+        
     def test_timeRemainingWhenTimeupIsZero(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         self.waitForTimeup()
@@ -94,6 +97,12 @@ class TestKitchenTimer(unittest.TestCase):
             sleep(elapsed)
             self.timer.stop()
             self.assertEqual((duration - elapsed), self.timer.timeRemaining)
+            
+    def test_canQueryTimeRemainingWhileTimerIsRunning(self):
+        self.timer.start(duration=3)
+        self.skipTest("refactor first lah")
+        sleep(1)        
+        self.assertEqual(2, self.timer.timeRemaining)
 
 
 if __name__ == "__main__":

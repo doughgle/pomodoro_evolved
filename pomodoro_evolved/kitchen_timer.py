@@ -19,16 +19,16 @@ class KitchenTimer(object):
     timeup =  "timeup"
     
     def __init__(self):
+        self.__stateLock = Lock()
         self.state = self.stopped        
         self.__timeRemainingLock = Lock()
         self.timeRemaining = 0
-        
-            
+                    
     def start(self, duration=1, whenTimeup=None):
         if self.state == self.running:
             raise AlreadyRunningError    
         else:
-            self.timeRemaining = round(duration, 1)
+            self.timeRemaining = duration
             self._startTime = self._now()
             self._timer = TTimer(duration, self._whenTimeup)
             self._timer.start()            
@@ -39,7 +39,7 @@ class KitchenTimer(object):
         if self.state == self.running:
             self._timer.cancel()
             self.state = self.stopped
-            self.timeRemaining -= round(self._elapsedTime(), 1)
+            self.timeRemaining -= self._elapsedTime()
         else:
             raise NotRunningError()
             
@@ -48,11 +48,21 @@ class KitchenTimer(object):
             return True
         else:
             return False
-        
+
+    @property
+    def state(self):
+        with self.__stateLock:
+            return self._state
+    
+    @state.setter
+    def state(self, state):
+        with self.__stateLock:
+            self._state = state
+            
     @property
     def timeRemaining(self):
         with self.__timeRemainingLock:
-            return self._timeRemaining
+            return round(self._timeRemaining, 1)
     
     @timeRemaining.setter
     def timeRemaining(self, timeRemaining):
