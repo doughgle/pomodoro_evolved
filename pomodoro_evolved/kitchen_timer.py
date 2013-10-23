@@ -14,6 +14,7 @@ class KitchenTimer(object):
         Querying the time remaining has 0.1 second accuracy.
     '''
     
+    PRECISION_NUM_DECIMAL_PLACES = 1
     running = "running"
     stopped = "stopped"
     timeup =  "timeup"
@@ -64,7 +65,7 @@ class KitchenTimer(object):
         with self.__timeRemainingLock:
             if self.isRunning():
                 self._timeRemaining -= self._elapsedTime()
-            return round(self._timeRemaining, 1)
+            return round(self._timeRemaining, self.PRECISION_NUM_DECIMAL_PLACES)
     
     @timeRemaining.setter
     def timeRemaining(self, timeRemaining):
