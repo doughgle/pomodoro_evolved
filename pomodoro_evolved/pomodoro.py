@@ -32,7 +32,7 @@ class Pomodoro(object):
             raise PomodoroAlreadyStarted()
         else:
             self.__isRunning = True
-            self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
+            self._timer.start(whenTimeup=self._whenTimeup, duration=minsToSecs(self._durationInMins))
                 
     def interrupt(self):
         if not self.isRunning():
