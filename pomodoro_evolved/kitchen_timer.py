@@ -20,8 +20,8 @@ class KitchenTimer(object):
     
     def __init__(self):
         self.__stateLock = Lock()
-        self.state = self.stopped        
         self.__timeRemainingLock = Lock()
+        self.state = self.stopped        
         self.timeRemaining = 0
                     
     def start(self, duration=1, whenTimeup=None):
@@ -47,10 +47,7 @@ class KitchenTimer(object):
         return self.state == self.running
                 
     def isTimeup(self):
-        if self.state == self.timeup:
-            return True
-        else:
-            return False
+        return self.state == self.timeup
 
     @property
     def state(self):
