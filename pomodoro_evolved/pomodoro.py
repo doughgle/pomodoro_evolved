@@ -1,6 +1,10 @@
+from kitchen_timer import KitchenTimer
 
 class PomodoroNotRunning(Exception): pass
 class PomodoroAlreadyStarted(Exception): pass
+
+def minsToSecs(mins):
+    return mins * 60
 
 class Pomodoro(object):
     '''
@@ -10,23 +14,29 @@ class Pomodoro(object):
       b) You interrupt it.
     '''
     
-    def __init__(self, whenTimeup):
+    def __init__(self, whenTimeup, durationInMins=1):
         self.__isRunning = False
+        self.__wasInterrupted = False
         self._whenTimeup = whenTimeup
+        self._durationInMins = durationInMins
+        self._timer = KitchenTimer()
         
     def isRunning(self):
         return self.__isRunning
         
     def wasInterrupted(self):
-        return False
+        return self.__wasInterrupted
     
     def start(self):
         if self.isRunning():
             raise PomodoroAlreadyStarted()
         else:
             self.__isRunning = True
-            if callable(self._whenTimeup):
-                self._whenTimeup()
+            self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
                 
     def interrupt(self):
-        raise PomodoroNotRunning()
+        if not self.isRunning():
+            raise PomodoroNotRunning()
+        else:
+            self._timer.stop()
+            self.__wasInterrupted = True

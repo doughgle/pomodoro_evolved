@@ -1,5 +1,6 @@
 import unittest
 from pomodoro import Pomodoro, PomodoroNotRunning, PomodoroAlreadyStarted
+from time import sleep
 
 class TestPomodoro(unittest.TestCase):
 
@@ -24,8 +25,28 @@ class TestPomodoro(unittest.TestCase):
 
     def test_afterStarting_PomodoroCallsBackWhenTimesUp(self):
         self.timeUp = False
+        self.pomodoro = Pomodoro(self.whenTimeup, 0.001)
         self.pomodoro.start()
+        sleep(0.1)
         self.assertTrue(self.timeUp)
+        
+    def test_afterStarting_isRunningReturnsTrue(self):
+        self.pomodoro.start()
+        self.assertTrue(self.pomodoro.isRunning())
+    
+    def test_afterInterrupting_wasInterruptedReturnsTrue(self):
+        self.pomodoro.start()
+        self.pomodoro.interrupt()
+        self.assertTrue(self.pomodoro.wasInterrupted())
+                
+    def test_afterPomodoroIsInterrupted_itWillNoLongerCallBack(self):
+        self.timeUp = False
+        self.pomodoro = Pomodoro(self.whenTimeup, 0.001)
+        self.pomodoro.start()
+        self.pomodoro.interrupt()
+        sleep(0.1)
+        self.assertFalse(self.timeUp, "whenTimeup should not have been called")
+        
         
 
 if __name__ == "__main__":
