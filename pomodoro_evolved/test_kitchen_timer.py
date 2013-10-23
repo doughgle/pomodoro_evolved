@@ -3,7 +3,7 @@ from time import sleep
 from kitchen_timer import KitchenTimer, NotRunningError, AlreadyRunningError    
 
 DEFAULT_TEST_DURATION = 0.01
-ENOUGH_TIME_TO_EXPIRE = DEFAULT_TEST_DURATION * 3
+ENOUGH_TIME_TO_EXPIRE = DEFAULT_TEST_DURATION * 2
 
 class TestKitchenTimer(unittest.TestCase):
     '''Unit tests for Kitchen Timer class.'''
