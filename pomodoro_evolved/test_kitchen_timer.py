@@ -99,10 +99,11 @@ class TestKitchenTimer(unittest.TestCase):
             self.assertEqual((duration - elapsed), self.timer.timeRemaining)
             
     def test_canQueryTimeRemainingWhileTimerIsRunning(self):
-        self.timer.start(duration=3)
-        self.skipTest("refactor first lah")
-        sleep(1)        
-        self.assertEqual(2, self.timer.timeRemaining)
+        elapsed = 0.1
+        duration=3
+        self.timer.start(duration)
+        sleep(elapsed)        
+        self.assertEqual((duration - elapsed), self.timer.timeRemaining)
 
 
 if __name__ == "__main__":
