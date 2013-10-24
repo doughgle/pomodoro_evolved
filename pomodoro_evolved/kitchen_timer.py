@@ -32,7 +32,7 @@ class KitchenTimer(object):
             self.state = self.RUNNING            
             self.duration = duration
             self._userWhenTimeup = whenTimeup
-            self._startTime = self._now()
+            self._startTime = time()
             self._timer = TTimer(duration, self._whenTimeup)
             self._timer.start()            
         
@@ -76,10 +76,7 @@ class KitchenTimer(object):
         self.state = self.TIMEUP
         self.timeRemaining = 0
         if callable(self._userWhenTimeup):
-            self._userWhenTimeup()    
-        
-    def _now(self):
-        return time()
+            self._userWhenTimeup()
     
     def _elapsedTime(self):
-        return self._now() - self._startTime
+        return time() - self._startTime
