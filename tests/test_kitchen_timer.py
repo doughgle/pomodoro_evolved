@@ -102,8 +102,9 @@ class TestKitchenTimer(unittest.TestCase):
         elapsed = 0.1
         duration=3
         self.timer.start(duration)
-        sleep(elapsed)        
-        self.assertEqual((duration - elapsed), self.timer.timeRemaining)
+        for i in range(1, 4):
+            sleep(elapsed)        
+            self.assertEqual((duration - (elapsed * i)), self.timer.timeRemaining)
 
 
 if __name__ == "__main__":
