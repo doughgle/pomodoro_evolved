@@ -1,6 +1,6 @@
 import unittest
 from time import sleep
-from kitchen_timer import KitchenTimer, NotRunningError, AlreadyRunningError    
+from kitchen_timer import KitchenTimer, NotRunningError, AlreadyRunningError
 
 DEFAULT_TEST_DURATION = 0.01
 ENOUGH_TIME_TO_EXPIRE = DEFAULT_TEST_DURATION * 2
@@ -20,33 +20,33 @@ class TestKitchenTimer(unittest.TestCase):
 
     def whenTimeup(self):
         self.timeupCalled = True
-        
-    def setUp(self):        
-        self.timer = KitchenTimer()        
+
+    def setUp(self):
+        self.timer = KitchenTimer()
 
     def test_afterInitialisation_TimerIsStopped(self):
         self.assertStopped()
-    
-    def test_stoppingWhenStopped_isANotRunningError(self):        
+
+    def test_stoppingWhenStopped_isANotRunningError(self):
         self.assertRaises(NotRunningError, self.timer.stop)
-            
+
     def test_afterStarting_TimerIsRunning(self):
         self.timer.start()
         self.assertRunning()
-        
+
     def test_startingWhileRunning_isAAlreadyRunningError(self):
         self.timer.start(duration=3)
         self.assertRaises(AlreadyRunningError, self.timer.start)
-    
+
     def test_afterStarting_timeupIsFalseWhileRunning(self):
         self.timer.start(duration=3)
         self.assertFalse(self.timer.isTimeup())
-        
+
     def test_afterTimerExpires_TimeUpIsTrue(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         sleep(ENOUGH_TIME_TO_EXPIRE)
-        self.assertTrue(self.timer.isTimeup())        
-    
+        self.assertTrue(self.timer.isTimeup())
+
     def test_timerCallsBackWhenTimeExpires(self):
         self.timeupCalled = False
         self.timer.start(duration=DEFAULT_TEST_DURATION, whenTimeup=self.whenTimeup)
@@ -66,7 +66,7 @@ class TestKitchenTimer(unittest.TestCase):
         
     def test_startingWhenStoppedRestartsTheTimer(self):
         self.timer.start()
-        self.timer.stop()        
+        self.timer.stop()
         self.timer.start()
         self.assertRunning()
                 
@@ -82,7 +82,7 @@ class TestKitchenTimer(unittest.TestCase):
         sleep(ENOUGH_TIME_TO_EXPIRE)
         self.assertFalse(self.timeupCalled)
         
-    def test_afterInitialisation_timeRemainingIsZero(self):        
+    def test_afterInitialisation_timeRemainingIsZero(self):
         self.assertEqual(0, self.timer.timeRemaining)
         
     def test_timeRemainingWhenTimeupIsZero(self):
@@ -91,8 +91,8 @@ class TestKitchenTimer(unittest.TestCase):
         self.assertEqual(0, self.timer.timeRemaining)
         
     def test_timeRemainingWhenStoppedIsAccurateToOneTenthOfASecond(self):
-        elapsed=0.1
-        for duration in (1, 10, 60):            
+        elapsed = 0.1
+        for duration in (1, 10, 60):
             self.timer.start(duration)
             sleep(elapsed)
             self.timer.stop()
@@ -100,11 +100,19 @@ class TestKitchenTimer(unittest.TestCase):
             
     def test_canQueryTimeRemainingWhileTimerIsRunning(self):
         elapsed = 0.1
-        duration=3
+        duration = 3
         self.timer.start(duration)
         for i in range(1, 4):
-            sleep(elapsed)        
+            sleep(elapsed)
             self.assertEqual((duration - (elapsed * i)), self.timer.timeRemaining)
+            
+    def test_whatHappensWhenTheDurationIsVeryFast(self):
+        self.skipTest("unable to reproduce race condition")
+        self.timer.start(0.001)
+        sleep(0.0005)
+        self.timer.stop()
+        self.assertEqual(0, self.timer.timeRemaining)
+        self.assertTrue(self.timer.isTimeup())
 
 
 if __name__ == "__main__":

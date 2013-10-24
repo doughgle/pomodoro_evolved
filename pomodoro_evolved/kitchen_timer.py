@@ -17,24 +17,24 @@ class KitchenTimer(object):
     PRECISION_NUM_DECIMAL_PLACES = 1
     RUNNING = "RUNNING"
     STOPPED = "STOPPED"
-    TIMEUP =  "TIMEUP"
+    TIMEUP  = "TIMEUP"
     
     def __init__(self):
         self.__stateLock = Lock()
         self.__timeRemainingLock = Lock()
-        self.state = self.STOPPED        
+        self.state = self.STOPPED
         self.timeRemaining = 0
                     
     def start(self, duration=1, whenTimeup=None):
         if self.isRunning():
-            raise AlreadyRunningError    
+            raise AlreadyRunningError
         else:
-            self.state = self.RUNNING            
+            self.state = self.RUNNING
             self.duration = duration
             self._userWhenTimeup = whenTimeup
             self._startTime = time()
             self._timer = TTimer(duration, self._whenTimeup)
-            self._timer.start()            
+            self._timer.start()
         
     def stop(self):
         if self.isRunning():

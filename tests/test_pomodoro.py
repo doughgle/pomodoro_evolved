@@ -47,7 +47,6 @@ class TestPomodoro(unittest.TestCase):
         sleep(0.1)
         self.assertFalse(self.timeUp, "whenTimeup should not have been called")
         
-        
 
 if __name__ == "__main__":
     unittest.main()
