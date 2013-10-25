@@ -1,4 +1,4 @@
-from threading import Timer as TTimer
+from threading import Timer
 from time import time
 from threading import Lock
 
@@ -33,7 +33,7 @@ class KitchenTimer(object):
             self.duration = duration
             self._userWhenTimeup = whenTimeup
             self._startTime = time()
-            self._timer = TTimer(duration, self._whenTimeup)
+            self._timer = Timer(duration, self._whenTimeup)
             self._timer.start()
         
     def stop(self):
