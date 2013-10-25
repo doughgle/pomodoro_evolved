@@ -1,6 +1,5 @@
-from threading import Timer
+from threading import Timer, Lock
 from time import time
-from threading import Lock
 
 class NotRunningError(Exception): pass
 class AlreadyRunningError(Exception): pass
