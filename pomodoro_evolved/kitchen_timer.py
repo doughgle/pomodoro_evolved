@@ -20,68 +20,62 @@ class KitchenTimer(object):
     
     def __init__(self):
         self._stateLock = Lock()
-        self._timeRemainingLock = Lock()
-        self.state = self.STOPPED
-        self.timeRemaining = 0
+        with self._stateLock:
+            self._state = self.STOPPED
+            self.timeRemaining = 0
                     
     def start(self, duration=1, whenTimeup=None):
         '''
         Starts the timer to count down from the given duration and call whenTimeup when time's up.
         '''
-        if self.isRunning():
-            raise AlreadyRunningError
-        else:
-            self.state = self.RUNNING
-            self.duration = duration
-            self._userWhenTimeup = whenTimeup
-            self._startTime = time()
-            self._timer = Timer(duration, self._whenTimeup)
-            self._timer.start()
+        with self._stateLock:
+            if self.isRunning():
+                raise AlreadyRunningError
+            else:
+                self._state = self.RUNNING
+                self.duration = duration
+                self._userWhenTimeup = whenTimeup
+                self._startTime = time()
+                self._timer = Timer(duration, self._whenTimeup)
+                self._timer.start()
         
     def stop(self):
         '''
         Stops the timer, preventing whenTimeup callback.
         '''
-        if self.isRunning():
-            self._timer.cancel()
-            self.state = self.STOPPED
-            self.timeRemaining = self.duration - self._elapsedTime()
-        else:
-            raise NotRunningError()
+        with self._stateLock:
+            if self.isRunning():
+                self._timer.cancel()
+                self._state = self.STOPPED
+                self.timeRemaining = self.duration - self._elapsedTime()
+            else:
+                raise NotRunningError()
 
     def isRunning(self):
-        return self.state == self.RUNNING
+        return self._state == self.RUNNING
                 
-    def isTimeup(self):
-        return self.state == self.TIMEUP
-
-    @property
-    def state(self):
-        with self._stateLock:
-            return self._state
+    def isStopped(self):
+        return self._state == self.STOPPED
     
-    @state.setter
-    def state(self, state):
-        with self._stateLock:
-            self._state = state
+    def isTimeup(self):
+        return self._state == self.TIMEUP
             
     @property
     def timeRemaining(self):
-        with self._timeRemainingLock:
-            if self.isRunning():
-                self._timeRemaining = self.duration - self._elapsedTime()
-            return round(self._timeRemaining, self.PRECISION_NUM_DECIMAL_PLACES)
+        if self.isRunning():
+            self._timeRemaining = self.duration - self._elapsedTime()
+        return round(self._timeRemaining, self.PRECISION_NUM_DECIMAL_PLACES)
     
     @timeRemaining.setter
     def timeRemaining(self, timeRemaining):
-        with self._timeRemainingLock:
-            self._timeRemaining = timeRemaining
+        self._timeRemaining = timeRemaining
                     
     def _whenTimeup(self):
-        self.state = self.TIMEUP
-        self.timeRemaining = 0
-        if callable(self._userWhenTimeup):
-            self._userWhenTimeup()
-    
+        with self._stateLock:
+            self._state = self.TIMEUP
+            self.timeRemaining = 0
+            if callable(self._userWhenTimeup):
+                self._userWhenTimeup()
+        
     def _elapsedTime(self):
         return time() - self._startTime
