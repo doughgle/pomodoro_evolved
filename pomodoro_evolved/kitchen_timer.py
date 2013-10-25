@@ -25,6 +25,9 @@ class KitchenTimer(object):
         self.timeRemaining = 0
                     
     def start(self, duration=1, whenTimeup=None):
+        '''
+        Starts the timer to count down from the given duration and call whenTimeup when time's up.
+        '''
         if self.isRunning():
             raise AlreadyRunningError
         else:
@@ -36,6 +39,9 @@ class KitchenTimer(object):
             self._timer.start()
         
     def stop(self):
+        '''
+        Stops the timer, preventing whenTimeup callback.
+        '''
         if self.isRunning():
             self._timer.cancel()
             self.state = self.STOPPED
