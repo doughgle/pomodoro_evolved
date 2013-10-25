@@ -20,8 +20,8 @@ class KitchenTimer(object):
     TIMEUP  = "TIMEUP"
     
     def __init__(self):
-        self.__stateLock = Lock()
-        self.__timeRemainingLock = Lock()
+        self._stateLock = Lock()
+        self._timeRemainingLock = Lock()
         self.state = self.STOPPED
         self.timeRemaining = 0
                     
@@ -52,24 +52,24 @@ class KitchenTimer(object):
 
     @property
     def state(self):
-        with self.__stateLock:
+        with self._stateLock:
             return self._state
     
     @state.setter
     def state(self, state):
-        with self.__stateLock:
+        with self._stateLock:
             self._state = state
             
     @property
     def timeRemaining(self):
-        with self.__timeRemainingLock:
+        with self._timeRemainingLock:
             if self.isRunning():
                 self._timeRemaining = self.duration - self._elapsedTime()
             return round(self._timeRemaining, self.PRECISION_NUM_DECIMAL_PLACES)
     
     @timeRemaining.setter
     def timeRemaining(self, timeRemaining):
-        with self.__timeRemainingLock:
+        with self._timeRemainingLock:
             self._timeRemaining = timeRemaining
                     
     def _whenTimeup(self):
