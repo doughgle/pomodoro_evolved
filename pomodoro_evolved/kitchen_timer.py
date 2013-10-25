@@ -22,7 +22,7 @@ class KitchenTimer(object):
         self._stateLock = Lock()
         with self._stateLock:
             self._state = self.STOPPED
-            self.timeRemaining = 0
+            self._timeRemaining = 0
                     
     def start(self, duration=1, whenTimeup=None):
         '''
@@ -47,7 +47,7 @@ class KitchenTimer(object):
             if self.isRunning():
                 self._timer.cancel()
                 self._state = self.STOPPED
-                self.timeRemaining = self.duration - self._elapsedTime()
+                self._timeRemaining = self.duration - self._elapsedTime()
             else:
                 raise NotRunningError()
 
@@ -65,15 +65,11 @@ class KitchenTimer(object):
         if self.isRunning():
             self._timeRemaining = self.duration - self._elapsedTime()
         return round(self._timeRemaining, self.PRECISION_NUM_DECIMAL_PLACES)
-    
-    @timeRemaining.setter
-    def timeRemaining(self, timeRemaining):
-        self._timeRemaining = timeRemaining
                     
     def _whenTimeup(self):
         with self._stateLock:
             self._state = self.TIMEUP
-            self.timeRemaining = 0
+            self._timeRemaining = 0
             if callable(self._userWhenTimeup):
                 self._userWhenTimeup()
         
