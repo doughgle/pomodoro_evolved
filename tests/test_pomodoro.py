@@ -46,7 +46,16 @@ class TestPomodoro(unittest.TestCase):
         self.pomodoro.interrupt()
         sleep(0.1)
         self.assertFalse(self.timeUp, "whenTimeup should not have been called")
+    
+    def test_afterInterrupting_isRunningReturnsFalse(self):
+        self.pomodoro.start()
+        self.pomodoro.interrupt()
+        self.assertFalse(self.pomodoro.isRunning())
         
+    def test_canQueryTimeRemainingAtSecondIntervals(self):
+        self.assertEqual(0, self.pomodoro.timeRemaining)
+        self.pomodoro.start()        
+        self.assertEqual(1500, self.pomodoro.timeRemaining)
 
 if __name__ == "__main__":
     unittest.main()
