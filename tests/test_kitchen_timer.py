@@ -13,11 +13,20 @@ class TestKitchenTimer(unittest.TestCase):
             pass
 
     def assertRunning(self):
-        return self.assertTrue(self.timer.isRunning())
+        self.assertTrue(self.timer.isRunning())
+        self.assertFalse(self.timer.isStopped())
+        self.assertFalse(self.timer.isTimeup())        
 
     def assertStopped(self):
-        return self.assertTrue(self.timer.isStopped())
+        self.assertTrue(self.timer.isStopped())
+        self.assertFalse(self.timer.isRunning())
+        self.assertFalse(self.timer.isTimeup())
 
+    def assertTimeup(self):
+        self.assertTrue(self.timer.isTimeup())
+        self.assertFalse(self.timer.isRunning())
+        self.assertFalse(self.timer.isStopped())
+    
     def whenTimeup(self):
         self.timeupCalled = True
 
@@ -45,7 +54,7 @@ class TestKitchenTimer(unittest.TestCase):
     def test_afterTimerExpires_TimeUpIsTrue(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         sleep(ENOUGH_TIME_TO_EXPIRE)
-        self.assertTrue(self.timer.isTimeup())
+        self.assertTimeup()
 
     def test_timerCallsBackWhenTimeExpires(self):
         self.timeupCalled = False
@@ -112,8 +121,29 @@ class TestKitchenTimer(unittest.TestCase):
         sleep(0.0005)
         self.timer.stop()
         self.assertEqual(0, self.timer.timeRemaining)
-        self.assertTrue(self.timer.isTimeup())
+        self.assertTimeup()
 
+
+class KitchenTimerConcurrencyTests(unittest.TestCase):
+    '''Concurrency Tests for Kitchen Timer class.'''
+    
+    def setUp(self):
+        self.timer = KitchenTimer()
+        
+    def test_ifStoppedBeforeTimeup_isStoppedShouldAlwaysBeTrue(self):
+        self.skipTest("unable to reliably reproduce race condition")
+        for duration in (DEFAULT_TEST_DURATION, 
+                         DEFAULT_TEST_DURATION/10, 
+                         DEFAULT_TEST_DURATION/100, 
+                         DEFAULT_TEST_DURATION/1000,
+                         DEFAULT_TEST_DURATION/10000):
+            self.timer.start(duration)
+            self.timer.stop()
+            self.assertTrue(self.timer.isStopped())
+            self.assertFalse(self.timer.isRunning())
+            self.assertFalse(self.timer.isTimeup())
+    
+    
 
 if __name__ == "__main__":
     unittest.main()
