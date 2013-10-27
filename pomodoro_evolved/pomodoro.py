@@ -58,6 +58,9 @@ class Pomodoro(object):
             return self._timer.timeRemaining
         
 if __name__ == '__main__':
+    '''
+    This example starts a 1 minute Pomodoro and prints "timeup!" when it completes.
+    '''    
     from time import sleep, strftime, gmtime
     import sys
     
