@@ -52,17 +52,23 @@ class Pomodoro(object):
 
     @property
     def timeRemaining(self):
-        if self.isRunning() or self.wasInterrupted():
-            return self._timer.timeRemaining
-        else:
+        if self._state == self.IDLE:
             return minsToSecs(self._durationInMins)
+        else:
+            return self._timer.timeRemaining
         
 if __name__ == '__main__':
+    from time import sleep, strftime, gmtime
+    import sys
+    
     def whenTimeup():
         print "timeup!"
         
-    pp = Pomodoro(whenTimeup, durationInMins=0.1)
-    print pp.timeRemaining
-    pp.start()    
-    print pp.timeRemaining
+    pp = Pomodoro(whenTimeup, durationInMins=1)
+    pp.start()
+    print "running Pomodoro..."
+    while pp.isRunning():
+        sys.stdout.write(strftime('%M:%S', gmtime(pp.timeRemaining)) + '\r')
+        sys.stdout.flush()
+        sleep(1)
     
