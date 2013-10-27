@@ -14,37 +14,48 @@ class Pomodoro(object):
       b) You interrupt it.
     '''
     
-    def __init__(self, whenTimeup, durationInMins=25):        
-        self._isRunning = False
-        self._wasInterrupted = False
-        self._whenTimeup = whenTimeup
+    IDLE =          "idle"
+    RUNNING =       "running"
+    INTERRUPTED =   "interrupted"
+    COMPLETED =     "completed"
+    
+    def __init__(self, whenTimeup, durationInMins=25):
+        self._state = self.IDLE
+        self._userWhenTimeup = whenTimeup
         self._durationInMins = durationInMins
         self._timer = KitchenTimer()
         
     def isRunning(self):
-        return self._isRunning
+        return self._state == self.RUNNING
         
     def wasInterrupted(self):
-        return self._wasInterrupted
+        return self._state == self.INTERRUPTED
     
     def start(self):
         if self.isRunning():
             raise PomodoroAlreadyStarted()
         else:
-            self._isRunning = True
+            self._state = self.RUNNING
             self._timer.start(whenTimeup=self._whenTimeup, duration=minsToSecs(self._durationInMins))
                 
+    def _whenTimeup(self):
+        self._state = self.COMPLETED
+        if callable(self._userWhenTimeup):
+            self._userWhenTimeup()
+    
     def interrupt(self):
         if not self.isRunning():
             raise PomodoroNotRunning()
         else:
             self._timer.stop()
-            self._isRunning = False
-            self._wasInterrupted = True
+            self._state = self.INTERRUPTED
 
     @property
     def timeRemaining(self):
-        return self._timer.timeRemaining
+        if self.isRunning() or self.wasInterrupted():
+            return self._timer.timeRemaining
+        else:
+            return minsToSecs(self._durationInMins)
         
 if __name__ == '__main__':
     def whenTimeup():

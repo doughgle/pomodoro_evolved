@@ -16,6 +16,9 @@ class TestPomodoro(unittest.TestCase):
     def test_afterCreation_pomodoroIsNotInterrupted(self):
         self.assertFalse(self.pomodoro.wasInterrupted())
         
+    def test_afterCreation_timeRemainingInSecondsIsEquivalentToDurationInMinutes(self):
+        self.assertEqual((self.pomodoro._durationInMins * 60), self.pomodoro.timeRemaining)
+        
     def test_interruptingAPomodoroThatIsNotRunningIsANotRunningException(self):
         self.assertRaises(PomodoroNotRunning, self.pomodoro.interrupt)
         
@@ -53,9 +56,17 @@ class TestPomodoro(unittest.TestCase):
         self.assertFalse(self.pomodoro.isRunning())
         
     def test_canQueryTimeRemainingAtSecondIntervals(self):
-        self.assertEqual(0, self.pomodoro.timeRemaining)
-        self.pomodoro.start()        
+        self.pomodoro.start()
         self.assertEqual(1500, self.pomodoro.timeRemaining)
+        
+    def test_afterPomodoroEnds_itsNoLongerRunningNorInterrupted(self):
+        self.pomodoro = Pomodoro(self.whenTimeup, 0.001)
+        self.pomodoro.start()
+        sleep(0.1)
+        self.assertFalse(self.pomodoro.isRunning())
+        self.assertFalse(self.pomodoro.wasInterrupted())
+
+        
 
 if __name__ == "__main__":
     unittest.main()
