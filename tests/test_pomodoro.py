@@ -66,7 +66,5 @@ class TestPomodoro(unittest.TestCase):
         self.assertFalse(self.pomodoro.isRunning())
         self.assertFalse(self.pomodoro.wasInterrupted())
 
-        
-
 if __name__ == "__main__":
     unittest.main()

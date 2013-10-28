@@ -15,7 +15,7 @@ class TestKitchenTimer(unittest.TestCase):
     def assertRunning(self):
         self.assertTrue(self.timer.isRunning())
         self.assertFalse(self.timer.isStopped())
-        self.assertFalse(self.timer.isTimeup())        
+        self.assertFalse(self.timer.isTimeup())
 
     def assertStopped(self):
         self.assertTrue(self.timer.isStopped())
@@ -132,18 +132,16 @@ class KitchenTimerConcurrencyTests(unittest.TestCase):
         
     def test_ifStoppedBeforeTimeup_isStoppedShouldAlwaysBeTrue(self):
         self.skipTest("unable to reliably reproduce race condition")
-        for duration in (DEFAULT_TEST_DURATION, 
-                         DEFAULT_TEST_DURATION/10, 
-                         DEFAULT_TEST_DURATION/100, 
-                         DEFAULT_TEST_DURATION/1000,
-                         DEFAULT_TEST_DURATION/10000):
+        for duration in (DEFAULT_TEST_DURATION,
+                         DEFAULT_TEST_DURATION / 10,
+                         DEFAULT_TEST_DURATION / 100,
+                         DEFAULT_TEST_DURATION / 1000,
+                         DEFAULT_TEST_DURATION / 10000):
             self.timer.start(duration)
             self.timer.stop()
             self.assertTrue(self.timer.isStopped())
             self.assertFalse(self.timer.isRunning())
             self.assertFalse(self.timer.isTimeup())
-    
-    
 
 if __name__ == "__main__":
     unittest.main()
