@@ -60,7 +60,7 @@ class Pomodoro(object):
 if __name__ == '__main__':
     '''
     This example starts a 1 minute Pomodoro and prints "timeup!" when it completes.
-    '''    
+    '''
     from time import sleep, strftime, gmtime
     import sys
     
@@ -74,4 +74,3 @@ if __name__ == '__main__':
         sys.stdout.write(strftime('%M:%S', gmtime(pp.timeRemaining)) + '\r')
         sys.stdout.flush()
         sleep(1)
-    
