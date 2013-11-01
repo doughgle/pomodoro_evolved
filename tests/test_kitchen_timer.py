@@ -99,13 +99,13 @@ class TestKitchenTimer(unittest.TestCase):
         self.waitForTimeup()
         self.assertEqual(0, self.timer.timeRemaining)
         
-    def test_timeRemainingWhenStoppedIsAccurateToOneTenthOfASecond(self):
+    def test_canQueryTimeRemainingWhenStopped(self):
         elapsed = 0.1
         for duration in (1, 10, 60):
             self.timer.start(duration)
             sleep(elapsed)
             self.timer.stop()
-            self.assertEqual((duration - elapsed), self.timer.timeRemaining)
+            self.assertEqual((duration - elapsed), round(self.timer.timeRemaining, 1))
             
     def test_canQueryTimeRemainingWhileTimerIsRunning(self):
         elapsed = 0.1
@@ -113,7 +113,7 @@ class TestKitchenTimer(unittest.TestCase):
         self.timer.start(duration)
         for i in range(1, 4):
             sleep(elapsed)
-            self.assertEqual((duration - (elapsed * i)), self.timer.timeRemaining)
+            self.assertEqual((duration - (elapsed * i)), round(self.timer.timeRemaining, 1))
             
     def test_whatHappensWhenTheDurationIsVeryFast(self):
         self.skipTest("unable to reproduce race condition")

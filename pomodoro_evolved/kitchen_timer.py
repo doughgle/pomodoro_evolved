@@ -8,12 +8,11 @@ class AlreadyRunningError(Exception): pass
 class KitchenTimer(object):
     '''
     Loosely models a clockwork kitchen timer with the following differences:
-        You can start the timer with arbitrary duration (e.g. 1.2 seconds).
+        You can start the timer with arbitrary duration (e.g. 1.25 seconds).
         The timer calls back a given function when time's up.
-        Querying the time remaining has 0.1 second accuracy.
+        Querying the time remaining returns fractions of a second if the system clock allows.
     '''
-    
-    PRECISION_NUM_DECIMAL_PLACES = 1
+
     RUNNING = "RUNNING"
     STOPPED = "STOPPED"
     TIMEUP  = "TIMEUP"
@@ -62,9 +61,12 @@ class KitchenTimer(object):
             
     @property
     def timeRemaining(self):
+        '''
+        Returns the time remaining in seconds.
+        '''
         if self.isRunning():
             self._timeRemaining = self.duration - self._elapsedTime()
-        return round(self._timeRemaining, self.PRECISION_NUM_DECIMAL_PLACES)
+        return self._timeRemaining
                     
     def _whenTimeup(self):
         with self._stateLock:
