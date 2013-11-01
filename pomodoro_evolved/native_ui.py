@@ -1,11 +1,13 @@
 import Tkinter as tk
+import tkFont
 from pomodoro import Pomodoro
 from datetime import timedelta
 
 class NativeUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.label = tk.Label(self, text="", width=10)
+        self.clockFont = tkFont.Font(family="Helvetica", size=18)
+        self.label = tk.Label(self, text="", width=10, font=self.clockFont)
         self.label.pack()
         self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.1)
         self.pomodoro.start()
