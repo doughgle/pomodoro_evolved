@@ -1,5 +1,5 @@
 from kitchen_timer import KitchenTimer
-from math import floor
+from math import ceil
 
 class PomodoroNotRunning(Exception): pass
 class PomodoroAlreadyStarted(Exception): pass
@@ -56,7 +56,7 @@ class Pomodoro(object):
         if self._state == self.IDLE:
             return minsToSecs(self._durationInMins)
         else:
-            return floor(self._timer.timeRemaining)
+            return ceil(self._timer.timeRemaining)
         
 if __name__ == '__main__':
     '''
