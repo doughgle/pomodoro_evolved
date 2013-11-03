@@ -33,9 +33,10 @@ class NativeUI(tk.Tk):
         
     def onStop(self):        
         if tkMessageBox.askyesno("", "Void this Pomodoro?"):
-            self.pomodoro.interrupt()
-            print "stopped!"
-            self.newPomodoro()
+            if self.pomodoro.isRunning():
+                self.pomodoro.interrupt()
+                print "stopped!"
+                self.newPomodoro()
         
     def drawClock(self):
         if self.pomodoro.isRunning():
