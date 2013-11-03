@@ -9,15 +9,15 @@ class NativeUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.clockFont = tkFont.Font(family="Helvetica", size=18)
-        self.label = tk.Label(self, width=10, font=self.clockFont)
+        self.clock = tk.Label(self, width=10, font=self.clockFont)
         self.startStopButton = tk.Button(self)
-        self.label.pack()
+        self.clock.pack()
         self.startStopButton.pack()
         self.newPomodoro()
 
     def newPomodoro(self):
         self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
-        self.label.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
+        self.clock.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
         self.startStopButton.configure(text="Start", command=self.onStart)
     
     def whenTimeup(self):
@@ -27,7 +27,7 @@ class NativeUI(tk.Tk):
         
     def onStart(self):
         self.pomodoro.start()
-        self.update_display()
+        self.drawClock()
         self.startStopButton.configure(text="Stop", command=self.onStop)
         print "started!"
         
@@ -37,10 +37,10 @@ class NativeUI(tk.Tk):
             print "stopped!"
             self.newPomodoro()
         
-    def update_display(self):
+    def drawClock(self):
         if self.pomodoro.isRunning():
-            self.label.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
-            self.after(1000, self.update_display)
+            self.clock.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
+            self.after(1000, self.drawClock)
 
 if __name__ == "__main__":
     app = NativeUI()
