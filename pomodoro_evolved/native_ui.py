@@ -27,7 +27,7 @@ class NativeUI(tk.Tk):
         
     def onStart(self):
         self.pomodoro.start()
-        self.update_display(self.pomodoro.timeRemaining)
+        self.update_display()
         self.startStopButton.configure(text="Stop", command=self.onStop)
         print "started!"
         
@@ -37,7 +37,7 @@ class NativeUI(tk.Tk):
             print "stopped!"
             self.newPomodoro()
         
-    def update_display(self, remaining=None):
+    def update_display(self):
         if self.pomodoro.isRunning():
             self.label.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
             self.after(1000, self.update_display)
