@@ -1,34 +1,46 @@
 import Tkinter as tk
 import tkFont
+import tkMessageBox
 from pomodoro import Pomodoro
 from datetime import timedelta
 
 class NativeUI(tk.Tk):
+    
     def __init__(self):
-        self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.1)
         tk.Tk.__init__(self)
         self.clockFont = tkFont.Font(family="Helvetica", size=18)
+        self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
         self.label = tk.Label(self, text=str(timedelta(seconds=self.pomodoro.timeRemaining)), width=10, font=self.clockFont)
+        self.startStopButton = tk.Button(self, text ="Start", command=self.onStart)
         self.label.pack()
-        self.startButton = tk.Button(self, text ="Start", command=self.onStart)
-        self.startButton.pack()
+        self.startStopButton.pack()
 
+    def newPomodoro(self):
+        self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
+        self.label.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
+        self.startStopButton.configure(text="Start", command=self.onStart)
+    
     def whenTimeup(self):
-        print "time's up!"
+        print "timeup!"
+        tkMessageBox.showinfo(message="Pomodoro Complete!")
+        self.newPomodoro()
         
     def onStart(self):
         self.pomodoro.start()
         self.update_display(self.pomodoro.timeRemaining)
+        self.startStopButton.configure(text="Stop", command=self.onStop)
         print "started!"
-        self.startButton.configure(text="Stop", command=self.onStop)
         
     def onStop(self):
-        self.pomodoro.interrupt()
-        print "stopped!"
+        if tkMessageBox.askyesno("", "Void this Pomodoro?"):
+            self.pomodoro.interrupt()
+            print "stopped!"
+            self.newPomodoro()
         
     def update_display(self, remaining=None):
-        self.label.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
-        self.after(1000, self.update_display)
+        if self.pomodoro.isRunning():
+            self.label.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
+            self.after(1000, self.update_display)
 
 if __name__ == "__main__":
     app = NativeUI()
