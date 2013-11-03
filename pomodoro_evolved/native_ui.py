@@ -9,11 +9,11 @@ class NativeUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.clockFont = tkFont.Font(family="Helvetica", size=18)
-        self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
-        self.label = tk.Label(self, text=str(timedelta(seconds=self.pomodoro.timeRemaining)), width=10, font=self.clockFont)
-        self.startStopButton = tk.Button(self, text ="Start", command=self.onStart)
+        self.label = tk.Label(self, width=10, font=self.clockFont)
+        self.startStopButton = tk.Button(self)
         self.label.pack()
         self.startStopButton.pack()
+        self.newPomodoro()
 
     def newPomodoro(self):
         self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
@@ -31,7 +31,7 @@ class NativeUI(tk.Tk):
         self.startStopButton.configure(text="Stop", command=self.onStop)
         print "started!"
         
-    def onStop(self):
+    def onStop(self):        
         if tkMessageBox.askyesno("", "Void this Pomodoro?"):
             self.pomodoro.interrupt()
             print "stopped!"
