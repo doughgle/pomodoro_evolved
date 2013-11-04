@@ -1,5 +1,6 @@
 
 class AlreadySkippedError(Exception): pass
+class CannotSkipOnceStarted(Exception): pass
 
 class ShortBreak(object):
     
@@ -9,6 +10,7 @@ class ShortBreak(object):
     
     def __init__(self):
         self._state = self.idle
+        self._durationInMins = 0
         
     def isRunning(self):
         return self._state == self.running
@@ -17,9 +19,16 @@ class ShortBreak(object):
         return self._state == self.skipped
     
     def skip(self):
-        self._state = self.skipped
+        if self._state == self.idle:
+            self._state = self.skipped
+        else:
+            raise CannotSkipOnceStarted()
     
     def start(self):
         if self._state == self.skipped:
             raise AlreadySkippedError()
         self._state = self.running
+        
+    @property
+    def timeRemaining(self):
+        return 0
