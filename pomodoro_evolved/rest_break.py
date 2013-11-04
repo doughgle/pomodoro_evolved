@@ -36,9 +36,11 @@ class Break(object):
     def stop(self):
         if self._state == self.skipped:
             raise BreakAlreadySkipped()
-        if self._state != self.running:
+        elif self._state != self.running:
             raise BreakNotStarted()    
-        
+        else:
+            self._timer.stop()
+            
     def isRunning(self):
         return self._state == self.running
     
