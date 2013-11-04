@@ -1,5 +1,5 @@
 import unittest
-from short_break import ShortBreak
+from short_break import Break
 from short_break import AlreadySkippedError, CannotSkipOnceStarted
 
 class TestShortBreak(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestShortBreak(unittest.TestCase):
         return self.assertNotEqual(self.shortBreak.isRunning(), self.shortBreak.wasSkipped())
     
     def setUp(self):
-        self.shortBreak = ShortBreak()        
+        self.shortBreak = Break()        
     
     def test_afterCreationShortBreakIsNotRunning(self):
         self.assertFalse(self.shortBreak.isRunning())

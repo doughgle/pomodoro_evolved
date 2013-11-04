@@ -2,7 +2,7 @@
 class AlreadySkippedError(Exception): pass
 class CannotSkipOnceStarted(Exception): pass
 
-class ShortBreak(object):
+class Break(object):
     
     idle =      "idle"
     running =   "running"
