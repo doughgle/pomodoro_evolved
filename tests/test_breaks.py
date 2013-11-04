@@ -51,10 +51,17 @@ class TestShortBreak(unittest.TestCase):
 
     def test_afterStarting_BreakCallsBackWhenTimesUp(self):
         self.timeUp = False
-        self.shortBreak = Break(self.whenTimeup, 0.001)
+        self.shortBreak = Break(self.whenTimeup, durationInMins=0.001)
         self.shortBreak.start()
         sleep(0.1)
         self.assertTrue(self.timeUp)
+        
+    def test_afterStarting_breakShouldNotCallBackBeforeTimesup(self):
+        self.timeUp = False
+        self.shortBreak = Break(self.whenTimeup, durationInMins=1)
+        self.shortBreak.start()
+        sleep(0.05)
+        self.assertFalse(self.timeUp)
 
         
         

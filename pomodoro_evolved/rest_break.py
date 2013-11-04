@@ -13,7 +13,7 @@ class Break(object):
     
     def __init__(self, whenTimeup, durationInMins=5):
         self._state = self.idle
-        self._durationInMins = 0
+        self._durationInMins = durationInMins
         self._whenTimeup = whenTimeup
         self._timer = KitchenTimer()
             
@@ -40,4 +40,4 @@ class Break(object):
 
     @property
     def timeRemaining(self):
-        return 0
+        return minsToSecs(self._durationInMins)
