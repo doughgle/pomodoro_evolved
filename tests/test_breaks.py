@@ -1,6 +1,6 @@
 import unittest
 from rest_break import Break
-from rest_break import AlreadySkippedError, CannotSkipOnceStarted
+from rest_break import AlreadySkippedError, CannotSkipOnceStarted, BreakAlreadyStarted
 
 class TestShortBreak(unittest.TestCase):
 
@@ -40,6 +40,11 @@ class TestShortBreak(unittest.TestCase):
     def test_afterStarting_skippingABreakIsACannotSkipBreakOnceStarted(self):
         self.shortBreak.start()
         self.assertRaises(CannotSkipOnceStarted, self.shortBreak.skip)
+        
+    def test_startingABreakThatIsAlreadyStartedIsAnAlreadyStartedException(self):
+        self.shortBreak.start()
+        self.assertRaises(BreakAlreadyStarted, self.shortBreak.start)
+
         
         
     
