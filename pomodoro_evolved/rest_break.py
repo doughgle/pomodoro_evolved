@@ -1,9 +1,10 @@
 from kitchen_timer import KitchenTimer
 from pomodoro import minsToSecs
 
-class AlreadySkippedError(Exception): pass
+class BreakAlreadySkipped(Exception): pass
 class CannotSkipOnceStarted(Exception): pass
 class BreakAlreadyStarted(Exception): pass
+class BreakNotStarted(Exception): pass
 
 class Break(object):
     
@@ -25,12 +26,18 @@ class Break(object):
     
     def start(self):
         if self._state == self.skipped:
-            raise AlreadySkippedError()
+            raise BreakAlreadySkipped()
         elif self._state == self.running:
             raise BreakAlreadyStarted()
         else:
             self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
-            self._state = self.running            
+            self._state = self.running
+            
+    def stop(self):
+        if self._state == self.skipped:
+            raise BreakAlreadySkipped()
+        if self._state != self.running:
+            raise BreakNotStarted()    
         
     def isRunning(self):
         return self._state == self.running

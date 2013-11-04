@@ -1,6 +1,6 @@
 import unittest
 from rest_break import Break
-from rest_break import AlreadySkippedError, CannotSkipOnceStarted, BreakAlreadyStarted
+from rest_break import BreakAlreadySkipped, CannotSkipOnceStarted, BreakAlreadyStarted, BreakNotStarted
 from time import sleep
 
 class TestRestBreak(unittest.TestCase):
@@ -33,7 +33,7 @@ class TestRestBreak(unittest.TestCase):
         
     def test_afterSkipping_startingABreakIsAnAlreadySkippedError(self):
         self.restBreak.skip()
-        self.assertRaises(AlreadySkippedError, self.restBreak.start)
+        self.assertRaises(BreakAlreadySkipped, self.restBreak.start)
         self.assertPostCondition_onceSkippedCanNeverBeRunning()
     
     def test_afterStarting_isRunningReturnsTrue(self):
@@ -62,6 +62,13 @@ class TestRestBreak(unittest.TestCase):
         self.restBreak.start()
         sleep(0.05)
         self.assertFalse(self.timeUp)
+        
+    def test_stoppingABreakThatsNotRunningIsABreakNotStartedError(self):
+        self.assertRaises(BreakNotStarted, self.restBreak.stop)
+        
+    def test_stoppingABreakThatsSkipped_isABreakSkippedError(self):
+        self.restBreak.skip()
+        self.assertRaises(BreakAlreadySkipped, self.restBreak.stop)
 
 if __name__ == "__main__":
     unittest.main()
