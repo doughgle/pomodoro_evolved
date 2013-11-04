@@ -1,6 +1,6 @@
 import unittest
-from short_break import Break
-from short_break import AlreadySkippedError, CannotSkipOnceStarted
+from rest_break import Break
+from rest_break import AlreadySkippedError, CannotSkipOnceStarted
 
 class TestShortBreak(unittest.TestCase):
 
