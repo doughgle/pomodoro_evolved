@@ -1,3 +1,5 @@
+from kitchen_timer import KitchenTimer
+from pomodoro import minsToSecs
 
 class AlreadySkippedError(Exception): pass
 class CannotSkipOnceStarted(Exception): pass
@@ -9,9 +11,11 @@ class Break(object):
     running =   "running"
     skipped =   "skipped"
     
-    def __init__(self):
+    def __init__(self, whenTimeup, durationInMins=5):
         self._state = self.idle
         self._durationInMins = 0
+        self._whenTimeup = whenTimeup
+        self._timer = KitchenTimer()
             
     def skip(self):
         if self._state == self.idle:
@@ -24,7 +28,9 @@ class Break(object):
             raise AlreadySkippedError()
         elif self._state == self.running:
             raise BreakAlreadyStarted()
-        self._state = self.running
+        else:
+            self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
+            self._state = self.running            
         
     def isRunning(self):
         return self._state == self.running

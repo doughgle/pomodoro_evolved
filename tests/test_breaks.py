@@ -1,17 +1,21 @@
 import unittest
 from rest_break import Break
 from rest_break import AlreadySkippedError, CannotSkipOnceStarted, BreakAlreadyStarted
+from time import sleep
 
 class TestShortBreak(unittest.TestCase):
+
+    def setUp(self):
+        self.shortBreak = Break(self.whenTimeup)
+                
+    def whenTimeup(self):
+        self.timeUp = True
 
     def assertRunning(self):
         return self.assertTrue(self.shortBreak.isRunning())
 
     def assertPostCondition_onceSkippedCanNeverBeRunning(self):
-        return self.assertNotEqual(self.shortBreak.isRunning(), self.shortBreak.wasSkipped())
-    
-    def setUp(self):
-        self.shortBreak = Break()        
+        return self.assertNotEqual(self.shortBreak.isRunning(), self.shortBreak.wasSkipped())    
     
     def test_afterCreationShortBreakIsNotRunning(self):
         self.assertFalse(self.shortBreak.isRunning())
@@ -44,6 +48,13 @@ class TestShortBreak(unittest.TestCase):
     def test_startingABreakThatIsAlreadyStartedIsAnAlreadyStartedException(self):
         self.shortBreak.start()
         self.assertRaises(BreakAlreadyStarted, self.shortBreak.start)
+
+    def test_afterStarting_BreakCallsBackWhenTimesUp(self):
+        self.timeUp = False
+        self.shortBreak = Break(self.whenTimeup, 0.001)
+        self.shortBreak.start()
+        sleep(0.1)
+        self.assertTrue(self.timeUp)
 
         
         
