@@ -18,12 +18,7 @@ class NativeUI(tk.Tk):
     def newPomodoro(self):
         self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
         self.clock.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
-        self.startStopButton.configure(text="Start", command=self.onStart)
-    
-    def whenTimeup(self):
-        print "timeup!"
-        tkMessageBox.showinfo(message="Pomodoro Complete!")
-        self.newPomodoro()
+        self.startStopButton.configure(text="Start", command=self.onStart)    
         
     def onStart(self):
         self.pomodoro.start()
@@ -37,7 +32,12 @@ class NativeUI(tk.Tk):
                 self.pomodoro.interrupt()
                 print "stopped!"
                 self.newPomodoro()
-        
+
+    def whenTimeup(self):
+        print "timeup!"
+        tkMessageBox.showinfo(message="Pomodoro Complete!")
+        self.newPomodoro()
+                
     def drawClock(self):
         if self.pomodoro.isRunning():
             self.clock.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
