@@ -11,6 +11,7 @@ class Break(object):
     idle =      "idle"
     running =   "running"
     skipped =   "skipped"
+    stopped =   "stopped"
     
     def __init__(self, whenTimeup, durationInMins=5):
         self._state = self.idle
@@ -40,6 +41,7 @@ class Break(object):
             raise BreakNotStarted()    
         else:
             self._timer.stop()
+            self._state = self.stopped
             
     def isRunning(self):
         return self._state == self.running
