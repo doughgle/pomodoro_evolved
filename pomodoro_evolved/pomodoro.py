@@ -1,11 +1,10 @@
 from kitchen_timer import KitchenTimer
 from math import ceil
+from utils import minsToSecs
 
 class PomodoroNotRunning(Exception): pass
 class PomodoroAlreadyStarted(Exception): pass
 
-def minsToSecs(mins):
-    return mins * 60
 
 class Pomodoro(object):
     '''

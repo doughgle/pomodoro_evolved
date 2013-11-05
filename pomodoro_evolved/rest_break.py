@@ -1,5 +1,5 @@
 from kitchen_timer import KitchenTimer
-from pomodoro import minsToSecs
+from utils import minsToSecs
 from math import ceil
 
 class BreakAlreadySkipped(Exception): pass
