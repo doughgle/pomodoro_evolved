@@ -5,6 +5,10 @@ from time import sleep
 
 class TestRestBreak(unittest.TestCase):
 
+    def assertNotRunningNorSkipped(self):
+        self.assertFalse(self.restBreak.isRunning())
+        self.assertFalse(self.restBreak.wasSkipped())
+
     def setUp(self):
         self.restBreak = Break(self.whenTimeup)
                 
@@ -81,8 +85,13 @@ class TestRestBreak(unittest.TestCase):
     def test_afterStopping_breakIsNotRunningNorSkipped(self):
         self.restBreak.start()
         self.restBreak.stop()
-        self.assertFalse(self.restBreak.isRunning())
-        self.assertFalse(self.restBreak.wasSkipped())
+        self.assertNotRunningNorSkipped()
+        
+    def test_afterTimeup_breakIsNotRunningNorSkipped(self):
+        self.restBreak = Break(self.whenTimeup, durationInMins=0.001)
+        self.restBreak.start()
+        sleep(0.1)
+        self.assertNotRunningNorSkipped()
 
 if __name__ == "__main__":
     unittest.main()

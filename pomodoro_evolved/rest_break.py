@@ -12,11 +12,12 @@ class Break(object):
     running =   "running"
     skipped =   "skipped"
     stopped =   "stopped"
+    timeup =    "timeup"
     
     def __init__(self, whenTimeup, durationInMins=5):
         self._state = self.idle
         self._durationInMins = durationInMins
-        self._whenTimeup = whenTimeup
+        self._userWhenTimeup = whenTimeup
         self._timer = KitchenTimer()
             
     def skip(self):
@@ -52,3 +53,8 @@ class Break(object):
     @property
     def timeRemaining(self):
         return minsToSecs(self._durationInMins)
+    
+    def _whenTimeup(self):
+        self._state = self.timeup
+        if callable(self._userWhenTimeup):
+            self._userWhenTimeup()
