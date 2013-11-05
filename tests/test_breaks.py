@@ -15,13 +15,13 @@ class TestRestBreak(unittest.TestCase):
         return self.assertTrue(self.restBreak.isRunning())
 
     def assertPostCondition_onceSkippedCanNeverBeRunning(self):
-        return self.assertNotEqual(self.restBreak.isRunning(), self.restBreak.wasSkipped())    
+        return self.assertNotEqual(self.restBreak.isRunning(), self.restBreak.wasSkipped())
     
     def test_afterCreationBreakIsNotRunning(self):
         self.assertFalse(self.restBreak.isRunning())
         
     def test_afterCreationBreakIsNotSkipped(self):
-        self.assertFalse(self.restBreak.wasSkipped())        
+        self.assertFalse(self.restBreak.wasSkipped())
     
     def test_afterCreation_timeRemainingInSecondsIsEquivalentToDurationInMinutes(self):
         self.assertEqual((self.restBreak._durationInMins * 60), self.restBreak.timeRemaining)
@@ -82,7 +82,7 @@ class TestRestBreak(unittest.TestCase):
         self.restBreak.start()
         self.restBreak.stop()
         self.assertFalse(self.restBreak.isRunning())
-        self.assertFalse(self.restBreak.wasSkipped())        
+        self.assertFalse(self.restBreak.wasSkipped())
 
 if __name__ == "__main__":
     unittest.main()

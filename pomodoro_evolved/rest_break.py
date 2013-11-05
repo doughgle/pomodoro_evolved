@@ -38,7 +38,7 @@ class Break(object):
         if self._state == self.skipped:
             raise BreakAlreadySkipped()
         elif self._state != self.running:
-            raise BreakNotStarted()    
+            raise BreakNotStarted()
         else:
             self._timer.stop()
             self._state = self.stopped
