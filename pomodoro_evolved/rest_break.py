@@ -1,5 +1,6 @@
 from kitchen_timer import KitchenTimer
 from pomodoro import minsToSecs
+from math import ceil
 
 class BreakAlreadySkipped(Exception): pass
 class CannotSkipOnceStarted(Exception): pass
@@ -52,7 +53,10 @@ class Break(object):
 
     @property
     def timeRemaining(self):
-        return minsToSecs(self._durationInMins)
+        if self._state == self.idle:
+            return minsToSecs(self._durationInMins)
+        else:
+            return ceil(self._timer.timeRemaining)
     
     def _whenTimeup(self):
         self._state = self.timeup

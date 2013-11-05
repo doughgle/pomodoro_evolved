@@ -67,6 +67,11 @@ class TestRestBreak(unittest.TestCase):
         sleep(0.1)
         self.assertFalse(self.timeUp)
         
+    def test_afterStarting_timeRemainingCanBeQueried(self):
+        self.restBreak.start()
+        sleep(1)
+        self.assertEqual(299, self.restBreak.timeRemaining)
+        
     def test_stoppingABreakThatsNotRunningIsABreakNotStartedError(self):
         self.assertRaises(BreakNotStarted, self.restBreak.stop)
         
@@ -86,12 +91,18 @@ class TestRestBreak(unittest.TestCase):
         self.restBreak.start()
         self.restBreak.stop()
         self.assertNotRunningNorSkipped()
-        
+                
     def test_afterTimeup_breakIsNotRunningNorSkipped(self):
         self.restBreak = Break(self.whenTimeup, durationInMins=0.001)
         self.restBreak.start()
         sleep(0.1)
         self.assertNotRunningNorSkipped()
 
+    def test_afterTimeup_timeRemainingIsZero(self):
+        self.restBreak = Break(self.whenTimeup, durationInMins=0.001)
+        self.restBreak.start()
+        sleep(0.1)
+        self.assertEqual(0, self.restBreak.timeRemaining)
+        
 if __name__ == "__main__":
     unittest.main()
