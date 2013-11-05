@@ -1,6 +1,7 @@
 import unittest
 from rest_break import Break
-from rest_break import BreakAlreadySkipped, CannotSkipOnceStarted, BreakAlreadyStarted, BreakNotStarted
+from rest_break import BreakAlreadySkipped, CannotSkipOnceStarted
+from rest_break import BreakAlreadyStarted, BreakNotStarted, BreakAlreadyTerminated
 from time import sleep
 
 class TestRestBreak(unittest.TestCase):
@@ -53,6 +54,18 @@ class TestRestBreak(unittest.TestCase):
         self.restBreak.start()
         self.assertRaises(BreakAlreadyStarted, self.restBreak.start)
 
+    def test_startingABreakAfterTimeup_isABreakTerminatedException(self):
+        self.restBreak = Break(self.whenTimeup, durationInMins=0.001)
+        self.restBreak.start()
+        sleep(0.1)
+        self.assertRaises(BreakAlreadyTerminated, self.restBreak.start)
+        
+    def test_startingABreakAfterStopped_isABreakTerminatedException(self):
+        self.restBreak = Break(self.whenTimeup, durationInMins=0.001)
+        self.restBreak.start()
+        self.restBreak.stop()
+        self.assertRaises(BreakAlreadyTerminated, self.restBreak.start)
+        
     def test_afterStarting_BreakCallsBackWhenTimesUp(self):
         self.timeUp = False
         self.restBreak = Break(self.whenTimeup, durationInMins=0.001)

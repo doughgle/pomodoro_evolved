@@ -6,6 +6,7 @@ class BreakAlreadySkipped(Exception): pass
 class CannotSkipOnceStarted(Exception): pass
 class BreakAlreadyStarted(Exception): pass
 class BreakNotStarted(Exception): pass
+class BreakAlreadyTerminated(Exception): pass
 
 class Break(object):
     
@@ -28,13 +29,15 @@ class Break(object):
             raise CannotSkipOnceStarted()
     
     def start(self):
-        if self._state == self.skipped:
+        if self._state == self.idle:
+            self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
+            self._state = self.running
+        elif self._state == self.skipped:
             raise BreakAlreadySkipped()
         elif self._state == self.running:
             raise BreakAlreadyStarted()
         else:
-            self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
-            self._state = self.running
+            raise BreakAlreadyTerminated()
             
     def stop(self):
         if self._state == self.skipped:
