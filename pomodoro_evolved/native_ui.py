@@ -3,7 +3,7 @@ import tkFont
 import tkMessageBox
 from pomodoro import Pomodoro
 from datetime import timedelta
-from Queue import Queue
+from Queue import Queue, Empty
 
 class NativeUI(tk.Tk):
     
@@ -16,7 +16,7 @@ class NativeUI(tk.Tk):
         self.startStopButton.pack()
         self.newPomodoro()
         self.uiQueue = Queue()
-        self._handleUiQueueRequests()
+        self._handleUiRequest()
 
     def newPomodoro(self):
         self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
@@ -37,6 +37,9 @@ class NativeUI(tk.Tk):
                 self.newPomodoro()
 
     def whenTimeup(self):
+        '''
+        Called by the Pomodoro in a separate thread when time's up.
+        '''
         print "timeup!"
         uiFunction = (tkMessageBox.showinfo, ("time's up", "Pomodoro Complete!"), {})
         self.uiQueue.put(uiFunction)
@@ -47,15 +50,18 @@ class NativeUI(tk.Tk):
             self.clock.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
             self.after(1000, self.drawClock)
             
-    def _handleUiQueueRequests(self):
+    def _handleUiRequest(self):
+        '''
+        Services the UI queue to handles UI requests in the main thread.
+        '''
         try:
             while True:
                 f, a, k = self.uiQueue.get_nowait()
                 f(*a, **k)
-        except:
+        except Empty:
             pass
         
-        self.after(200, self._handleUiQueueRequests)
+        self.after(200, self._handleUiRequest)
 
 if __name__ == "__main__":
     app = NativeUI()
