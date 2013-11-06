@@ -4,7 +4,7 @@ from rest_break import BreakAlreadySkipped, BreakCannotBeSkippedOnceStarted
 from rest_break import BreakAlreadyStarted, BreakNotStarted, BreakAlreadyTerminated
 from time import sleep
 
-DEFAULT_BREAK_DURATION_MINS = 0.0001
+DEFAULT_BREAK_DURATION_MINS = 0.0005
 ENOUGH_SECONDS_TO_EXPIRE = DEFAULT_BREAK_DURATION_MINS * 60 * 2
 
 class TestRestBreak(unittest.TestCase):
