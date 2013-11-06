@@ -43,9 +43,9 @@ class Break(object):
         if self._state == self.IDLE:
             self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
             self._state = self.RUNNING
-        elif self._state == self.SKIPPED:
+        elif self.wasSkipped():
             raise BreakAlreadySkipped()
-        elif self._state == self.RUNNING:
+        elif self.isRunning():
             raise BreakAlreadyStarted()
         else:
             raise BreakAlreadyTerminated()
@@ -54,9 +54,9 @@ class Break(object):
         '''
         Stops the break forever. Restarting is forbidden.
         '''
-        if self._state == self.SKIPPED:
+        if self.wasSkipped():
             raise BreakAlreadySkipped()
-        elif self._state != self.RUNNING:
+        elif not self.isRunning():
             raise BreakNotStarted()
         else:
             self._timer.stop()
