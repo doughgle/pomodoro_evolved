@@ -3,7 +3,7 @@ from utils import minsToSecs
 from math import ceil
 
 class BreakAlreadySkipped(Exception): pass
-class CannotSkipOnceStarted(Exception): pass
+class BreakCannotBeSkippedOnceStarted(Exception): pass
 class BreakAlreadyStarted(Exception): pass
 class BreakNotStarted(Exception): pass
 class BreakAlreadyTerminated(Exception): pass
@@ -34,7 +34,7 @@ class Break(object):
         if self._state == self.IDLE:
             self._state = self.SKIPPED
         else:
-            raise CannotSkipOnceStarted()
+            raise BreakCannotBeSkippedOnceStarted()
     
     def start(self):
         '''

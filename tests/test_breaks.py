@@ -1,6 +1,6 @@
 import unittest
 from rest_break import Break
-from rest_break import BreakAlreadySkipped, CannotSkipOnceStarted
+from rest_break import BreakAlreadySkipped, BreakCannotBeSkippedOnceStarted
 from rest_break import BreakAlreadyStarted, BreakNotStarted, BreakAlreadyTerminated
 from time import sleep
 
@@ -8,7 +8,8 @@ DEFAULT_BREAK_DURATION_MINS = 0.0001
 ENOUGH_SECONDS_TO_EXPIRE = DEFAULT_BREAK_DURATION_MINS * 60 * 2
 
 class TestRestBreak(unittest.TestCase):
-
+    '''Unit tests for Break class.'''
+    
     def assertNotRunningNorSkipped(self):
         self.assertFalse(self.restBreak.isRunning())
         self.assertFalse(self.restBreak.wasSkipped())
@@ -51,7 +52,7 @@ class TestRestBreak(unittest.TestCase):
         
     def test_afterStarting_skippingABreakIsACannotSkipBreakOnceStarted(self):
         self.restBreak.start()
-        self.assertRaises(CannotSkipOnceStarted, self.restBreak.skip)
+        self.assertRaises(BreakCannotBeSkippedOnceStarted, self.restBreak.skip)
         
     def test_startingABreakThatIsAlreadyStartedIsAnAlreadyStartedException(self):
         self.restBreak.start()
