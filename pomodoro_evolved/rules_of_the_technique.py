@@ -3,10 +3,10 @@ class RulesOfTheTechnique(object):
     
     EVERY_FOUR_POMODOROS = 4
     
-    def __init__(self, pomodoro, shortBreak, longBreak, longBreakInterval=EVERY_FOUR_POMODOROS):
-        self.Pomodoro = pomodoro
-        self.ShortBreak = shortBreak
-        self.LongBreak = longBreak
+    def __init__(self, pomodoroCls, shortBreakCls, longBreakCls, longBreakInterval=EVERY_FOUR_POMODOROS):
+        self.Pomodoro = pomodoroCls
+        self.ShortBreak = shortBreakCls
+        self.LongBreak = longBreakCls
         self._completedPomodoros = 0
         self.longBreakInterval = longBreakInterval
 
