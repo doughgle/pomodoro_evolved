@@ -24,7 +24,7 @@ class RulesOfTheTechnique(object):
     def newTimer(self, prevTimer=None):        
         timer = self.Pomodoro()
         if prevTimer is not None:
-            if prevTimer.type == "Pomodoro":
+            if isinstance(prevTimer, self.Pomodoro):
                 self._completedPomodoros += 1
                 if self.isLongBreakTime():
                     timer = self.LongBreak()
