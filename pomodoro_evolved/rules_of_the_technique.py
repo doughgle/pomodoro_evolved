@@ -1,14 +1,25 @@
 
 class RulesOfTheTechnique(object):
     
-    def __init__(self, pomodoro, shortBreak, longBreak):
-        self._completedPomodoros = 0
+    EVERY_FOUR_POMODOROS = 4
+    
+    def __init__(self, pomodoro, shortBreak, longBreak, longBreakInterval=EVERY_FOUR_POMODOROS):
         self.Pomodoro = pomodoro
         self.ShortBreak = shortBreak
         self.LongBreak = longBreak
+        self._completedPomodoros = 0
+        self.longBreakInterval = longBreakInterval
 
+    @property
+    def longBreakInterval(self):
+        return self._longBreakInterval
+
+    @longBreakInterval.setter
+    def longBreakInterval(self, newInterval):
+        self._longBreakInterval = newInterval
+        
     def isLongBreakTime(self):
-        return self._completedPomodoros % 4 == 0
+        return self._completedPomodoros % self.longBreakInterval == 0
         
     def newTimer(self, prevTimer=None):        
         timer = self.Pomodoro()
