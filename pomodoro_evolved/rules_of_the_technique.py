@@ -1,3 +1,4 @@
+#Probable violation of the Liskov Substitution Principle.
 
 class RulesOfTheTechnique(object):
     '''
@@ -5,8 +6,8 @@ class RulesOfTheTechnique(object):
       Begin with a Pomodoro.
       After a Pomodoro, take a rest break.
       After a rest break, start a new Pomodoro.
-      Usually a Pomodoro is followed by a short break, except when the long break interval is reached.
-      After a decided number of Pomodoros (default=4) a long break will replace the short break.
+      Rest breaks are usually a short break. However, periodically after a decided number of Pomodoros, the long break interval,
+      take a long break instead.
     '''
       
     EVERY_FOUR_POMODOROS = 4
