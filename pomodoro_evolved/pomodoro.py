@@ -11,7 +11,7 @@ class Pomodoro(object):
     A Pomodoro is the indivisable unit of time used to work on a task.
     After starting, the Pomodoro is running until:
       a) You complete it.
-      b) You interrupt it.
+      b) You stop it.
     '''
     
     IDLE =          "idle"
@@ -32,7 +32,7 @@ class Pomodoro(object):
             self._state = self.RUNNING
             self._timer.start(whenTimeup=self._whenTimeup, duration=minsToSecs(self._durationInMins))
                     
-    def interrupt(self):
+    def stop(self):
         if not self.isRunning():
             raise PomodoroNotRunning()
         else:

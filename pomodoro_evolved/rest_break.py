@@ -23,8 +23,8 @@ class Break(object):
     
     def __init__(self, whenTimeup, durationInMins=5):
         self._state = self.IDLE
-        self._durationInMins = durationInMins
         self._userWhenTimeup = whenTimeup
+        self._durationInMins = durationInMins
         self._timer = KitchenTimer()
             
     def skip(self):
