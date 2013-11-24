@@ -74,7 +74,7 @@ class Break(object):
         Returns the time remaining in seconds.
         '''
         if self._state == self.IDLE:
-            return minsToSecs(self._durationInMins)
+            return ceil(minsToSecs(self._durationInMins))
         else:
             return ceil(self._timer.timeRemaining)
     

@@ -48,7 +48,7 @@ class Pomodoro(object):
     @property
     def timeRemaining(self):
         if self._state == self.IDLE:
-            return minsToSecs(self._durationInMins)
+            return ceil(minsToSecs(self._durationInMins))
         else:
             return ceil(self._timer.timeRemaining)
         
