@@ -23,7 +23,7 @@ class MockLongBreak(object):
 class TestRulesOfTheTechnique(unittest.TestCase):
 
     def setUp(self):
-        self.rules = RulesOfTheTechnique(pomodoro=MockPomodoro, shortBreak=MockShortBreak, longBreak=MockLongBreak)        
+        self.rules = RulesOfTheTechnique(pomodoroCls=MockPomodoro, shortBreakCls=MockShortBreak, longBreakCls=MockLongBreak)        
 
     def assertPomodoro(self):
         return self.assertEqual("Pomodoro", self.timer.type)
