@@ -4,6 +4,8 @@ import tkMessageBox
 from pomodoro import Pomodoro
 from datetime import timedelta
 from Queue import Queue, Empty
+from rest_break import Break as ShortBreak
+from rest_break import Break as LongBreak
 
 class NativeUI(tk.Tk):
     
@@ -14,40 +16,59 @@ class NativeUI(tk.Tk):
         self.startStopButton = tk.Button(self)
         self.clock.pack()
         self.startStopButton.pack()
-        self.newPomodoro()
         self.uiQueue = Queue()
         self._handleUiRequest()
+        self._completedPomodoros = 0
+        self.newTimer()
 
-    def newPomodoro(self):
-        self.pomodoro = Pomodoro(self.whenTimeup, durationInMins=0.05)
-        self.clock.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
+    def isLongBreakTime(self):
+        return self._completedPomodoros % 4 == 0
+    
+    def newTimer(self, prevTimer=None):
+        '''
+        Set's up the next timer, whether it's a Pomodoro or a Break
+        '''
+        self.timer = Pomodoro(self.whenTimeup, durationInMins=0.05)
+        self.timerName = "Pomodoro"
+        if prevTimer is not None:
+            if isinstance(prevTimer, Pomodoro):
+                self._completedPomodoros += 1
+                if self.isLongBreakTime():
+                    self.timer = LongBreak(self.whenTimeup, durationInMins=0.1)
+                    self.timerName = "Long Break"
+                else:
+                    self.timer = ShortBreak(self.whenTimeup, durationInMins=0.02)
+                    self.timerName = "Short Break"
+        
+        self.title(self.timerName)
+        self.clock.configure(text=str(timedelta(seconds=self.timer.timeRemaining)))
         self.startStopButton.configure(text="Start", command=self.onStart)
         
     def onStart(self):
-        self.pomodoro.start()
+        self.timer.start()
         self.drawClock()
         self.startStopButton.configure(text="Stop", command=self.onStop)
-        print "started!"
+        print "started %s!" %self.timerName
         
     def onStop(self):
-        if tkMessageBox.askyesno("", "Void this Pomodoro?"):
-            if self.pomodoro.isRunning():
-                self.pomodoro.interrupt()
+        if tkMessageBox.askyesno("", "Void this %s?" %self.timerName):
+            if self.timer.isRunning():
+                self.timer.stop()
                 print "stopped!"
-                self.newPomodoro()
+                self.newTimer(self.timer)
 
     def whenTimeup(self):
         '''
-        Called by the Pomodoro in a separate thread when time's up.
+        Called by the timer in a separate thread when time's up.
         '''
         print "timeup!"
-        uiFunction = (tkMessageBox.showinfo, ("time's up", "Pomodoro Complete!"), {})
+        uiFunction = (tkMessageBox.showinfo, ("time's up", "%s Complete!" %self.timerName), {})
         self.uiQueue.put(uiFunction)
-        self.newPomodoro()
+        self.newTimer(self.timer)
                 
     def drawClock(self):
-        if self.pomodoro.isRunning():
-            self.clock.configure(text=str(timedelta(seconds=self.pomodoro.timeRemaining)))
+        if self.timer.isRunning():
+            self.clock.configure(text=str(timedelta(seconds=self.timer.timeRemaining)))
             self.after(1000, self.drawClock)
             
     def _handleUiRequest(self):
