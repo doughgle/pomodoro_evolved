@@ -1,6 +1,7 @@
 import unittest
 from time import sleep
-from kitchen_timer import KitchenTimer, NotRunningError, AlreadyRunningError
+from kitchen_timer import KitchenTimer
+from kitchen_timer import NotRunningError, AlreadyRunningError, TimeAlreadyUp
 from utils import minsToSecs
 
 DEFAULT_TEST_DURATION = 0.01
@@ -69,11 +70,10 @@ class TestKitchenTimer(unittest.TestCase):
         sleep(ENOUGH_TIME_TO_EXPIRE)
         self.assertTrue(self.timeupCalled)    
         
-    def test_startingWhenTimeupRestartsTheTimer(self):
+    def test_startingAfterTimeup_isATimerAlreadyFinishedException(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         self.waitForTimeup()
-        self.timer.start()
-        self.assertRunning()
+        self.assertRaises(TimeAlreadyUp, self.timer.start)
         
     def test_stoppingWhenTimeup_isNotRunningError(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)

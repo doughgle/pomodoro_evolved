@@ -4,6 +4,7 @@ from utils import minsToSecs
 
 class NotRunningError(Exception): pass
 class AlreadyRunningError(Exception): pass
+class TimeAlreadyUp(Exception): pass
 
 
 class KitchenTimer(object):
@@ -33,6 +34,8 @@ class KitchenTimer(object):
         with self._stateLock:
             if self.isRunning():
                 raise AlreadyRunningError
+            elif self.isTimeup():
+                raise TimeAlreadyUp()
             else:
                 self._state = self.RUNNING
                 self.duration = duration
