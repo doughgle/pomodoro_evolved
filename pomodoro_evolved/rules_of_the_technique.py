@@ -1,4 +1,4 @@
-#Probable violation of the Liskov Substitution Principle.
+
 
 class RulesOfTheTechnique(object):
     '''
