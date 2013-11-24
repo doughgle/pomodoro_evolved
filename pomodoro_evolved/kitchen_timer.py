@@ -1,5 +1,6 @@
 from threading import Timer, Lock
 from time import time
+from utils import minsToSecs
 
 class NotRunningError(Exception): pass
 class AlreadyRunningError(Exception): pass
@@ -13,14 +14,16 @@ class KitchenTimer(object):
         Querying the time remaining returns fractions of a second if the system clock allows.
     '''
 
+    IDLE =    "IDLE"
     RUNNING = "RUNNING"
     STOPPED = "STOPPED"
     TIMEUP  = "TIMEUP"
     
-    def __init__(self):
+    def __init__(self, whenTimeup=None, durationInMins=1):
         self._stateLock = Lock()
         with self._stateLock:
-            self._state = self.STOPPED
+            self._state = self.IDLE
+            self._durationInMins = durationInMins
             self._timeRemaining = 0
                     
     def start(self, duration=1, whenTimeup=None):
@@ -64,6 +67,8 @@ class KitchenTimer(object):
         '''
         Returns the time remaining in seconds.
         '''
+        if self._state == self.IDLE:
+            return minsToSecs(self._durationInMins)
         if self.isRunning():
             self._timeRemaining = self.duration - self._elapsedTime()
         return self._timeRemaining

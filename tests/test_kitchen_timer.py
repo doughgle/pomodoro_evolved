@@ -1,6 +1,7 @@
 import unittest
 from time import sleep
 from kitchen_timer import KitchenTimer, NotRunningError, AlreadyRunningError
+from utils import minsToSecs
 
 DEFAULT_TEST_DURATION = 0.01
 ENOUGH_TIME_TO_EXPIRE = DEFAULT_TEST_DURATION * 2
@@ -8,6 +9,9 @@ ENOUGH_TIME_TO_EXPIRE = DEFAULT_TEST_DURATION * 2
 class TestKitchenTimer(unittest.TestCase):
     '''Unit tests for Kitchen Timer class.'''
 
+    def setUp(self):
+        self.timer = KitchenTimer()
+        
     def waitForTimeup(self):
         while not self.timer.isTimeup():
             pass
@@ -30,14 +34,17 @@ class TestKitchenTimer(unittest.TestCase):
     def whenTimeup(self):
         self.timeupCalled = True
 
-    def setUp(self):
-        self.timer = KitchenTimer()
-
-    def test_afterInitialisation_TimerIsStopped(self):
-        self.assertStopped()
-
-    def test_stoppingWhenStopped_isANotRunningError(self):
-        self.assertRaises(NotRunningError, self.timer.stop)
+    def test_afterInitialisation_TimerIsNotRunning(self):
+        self.assertFalse(self.timer.isRunning())
+        
+    def test_afterInitialisation_TimerIsNotStopped(self):
+        self.assertFalse(self.timer.isStopped())
+    
+    def test_afterInitialisation_TimerIsNotTimeup(self):
+        self.assertFalse(self.timer.isTimeup())
+                        
+    def test_afterInitialisation_timeRemainingInSecondsIsEquivalentToDurationInMins(self):
+        self.assertEqual(minsToSecs(self.timer._durationInMins), self.timer.timeRemaining)        
 
     def test_afterStarting_TimerIsRunning(self):
         self.timer.start()
@@ -60,7 +67,7 @@ class TestKitchenTimer(unittest.TestCase):
         self.timeupCalled = False
         self.timer.start(duration=DEFAULT_TEST_DURATION, whenTimeup=self.whenTimeup)
         sleep(ENOUGH_TIME_TO_EXPIRE)
-        self.assertTrue(self.timeupCalled)
+        self.assertTrue(self.timeupCalled)    
         
     def test_startingWhenTimeupRestartsTheTimer(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
@@ -72,6 +79,9 @@ class TestKitchenTimer(unittest.TestCase):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         self.waitForTimeup()
         self.assertRaises(NotRunningError, self.timer.stop)
+        
+    def test_stoppingWhenStopped_isANotRunningError(self):
+        self.assertRaises(NotRunningError, self.timer.stop)        
         
     def test_startingWhenStoppedRestartsTheTimer(self):
         self.timer.start()
@@ -89,11 +99,8 @@ class TestKitchenTimer(unittest.TestCase):
         self.timer.start(duration=DEFAULT_TEST_DURATION, whenTimeup=self.whenTimeup)
         self.timer.stop()
         sleep(ENOUGH_TIME_TO_EXPIRE)
-        self.assertFalse(self.timeupCalled)
-        
-    def test_afterInitialisation_timeRemainingIsZero(self):
-        self.assertEqual(0, self.timer.timeRemaining)
-        
+        self.assertFalse(self.timeupCalled, "whenTimeup should not have been called")
+                
     def test_timeRemainingWhenTimeupIsZero(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         self.waitForTimeup()
