@@ -25,7 +25,7 @@ class Break(object):
         self._state = self.IDLE
         self._userWhenTimeup = whenTimeup
         self._durationInMins = durationInMins
-        self._timer = KitchenTimer()
+        self._timer = KitchenTimer(self._whenTimeup, durationInMins)
             
     def skip(self):
         '''
@@ -41,7 +41,7 @@ class Break(object):
         Starts the break counting down from the given durationInMins.
         '''
         if self._state == self.IDLE:
-            self._timer.start(minsToSecs(self._durationInMins), self._whenTimeup)
+            self._timer.start()
             self._state = self.RUNNING
         elif self.wasSkipped():
             raise BreakAlreadySkipped()

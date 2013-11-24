@@ -24,10 +24,11 @@ class KitchenTimer(object):
         self._stateLock = Lock()
         with self._stateLock:
             self._state = self.IDLE
-            self._durationInMins = durationInMins
+            self._userWhenTimeup = whenTimeup
+            self._durationInSecs = minsToSecs(durationInMins)
             self._timeRemaining = 0
                     
-    def start(self, duration=1, whenTimeup=None):
+    def start(self):
         '''
         Starts the timer to count down from the given duration and call whenTimeup when time's up.
         '''
@@ -38,10 +39,8 @@ class KitchenTimer(object):
                 raise TimeAlreadyUp()
             else:
                 self._state = self.RUNNING
-                self.duration = duration
-                self._userWhenTimeup = whenTimeup
                 self._startTime = time()
-                self._timer = Timer(duration, self._whenTimeup)
+                self._timer = Timer(self._durationInSecs, self._whenTimeup)
                 self._timer.start()
         
     def stop(self):
@@ -52,7 +51,7 @@ class KitchenTimer(object):
             if self.isRunning():
                 self._timer.cancel()
                 self._state = self.STOPPED
-                self._timeRemaining = self.duration - self._elapsedTime()
+                self._timeRemaining = self._durationInSecs - self._elapsedTime()
             else:
                 raise NotRunningError()
 
@@ -71,9 +70,9 @@ class KitchenTimer(object):
         Returns the time remaining in seconds.
         '''
         if self._state == self.IDLE:
-            return minsToSecs(self._durationInMins)
+            return self._durationInSecs
         if self.isRunning():
-            self._timeRemaining = self.duration - self._elapsedTime()
+            self._timeRemaining = self._durationInSecs - self._elapsedTime()
         return self._timeRemaining
                     
     def _whenTimeup(self):

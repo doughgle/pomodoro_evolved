@@ -4,11 +4,11 @@ from time import sleep
 
 class TestPomodoro(unittest.TestCase):
 
-    def whenTimeup(self):
-        self.timeUp = True
-        
     def setUp(self):
         self.pomodoro = Pomodoro(self.whenTimeup)
+        
+    def whenTimeup(self):
+        self.timeUp = True
 
     def test_afterCreation_pomodoroIsNotRunning(self):
         self.assertFalse(self.pomodoro.isRunning())
@@ -20,7 +20,7 @@ class TestPomodoro(unittest.TestCase):
         self.assertEqual((self.pomodoro._durationInMins * 60), self.pomodoro.timeRemaining)
         
     def test_interruptingAPomodoroThatIsNotRunningIsANotRunningException(self):
-        self.assertRaises(PomodoroNotRunning, self.pomodoro.interrupt)
+        self.assertRaises(PomodoroNotRunning, self.pomodoro.stop)
         
     def test_startingAPomodoroThatIsAlreadyStartedIsAnAlreadyStartedException(self):
         self.pomodoro.start()
@@ -39,20 +39,20 @@ class TestPomodoro(unittest.TestCase):
     
     def test_afterInterrupting_wasInterruptedReturnsTrue(self):
         self.pomodoro.start()
-        self.pomodoro.interrupt()
+        self.pomodoro.stop()
         self.assertTrue(self.pomodoro.wasInterrupted())
                 
     def test_afterPomodoroIsInterrupted_itWillNoLongerCallBack(self):
         self.timeUp = False
         self.pomodoro = Pomodoro(self.whenTimeup, 0.001)
         self.pomodoro.start()
-        self.pomodoro.interrupt()
+        self.pomodoro.stop()
         sleep(0.1)
         self.assertFalse(self.timeUp, "whenTimeup should not have been called")
     
     def test_afterInterrupting_isRunningReturnsFalse(self):
         self.pomodoro.start()
-        self.pomodoro.interrupt()
+        self.pomodoro.stop()
         self.assertFalse(self.pomodoro.isRunning())
         
     def test_canQueryTimeRemainingAtSecondIntervals(self):
