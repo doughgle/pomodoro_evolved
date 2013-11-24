@@ -101,7 +101,13 @@ class TestKitchenTimer(unittest.TestCase):
         sleep(ENOUGH_TIME_TO_EXPIRE)
         self.assertFalse(self.timeupCalled, "whenTimeup should not have been called")
                 
-    def test_timeRemainingWhenTimeupIsZero(self):
+    def test_afterStarting_timerShouldNotCallBackBeforeTimesup(self):
+        self.timeupCalled = False
+        self.timer.start(duration=60, whenTimeup=self.whenTimeup)
+        sleep(0.01)
+        self.assertFalse(self.timeupCalled)
+                        
+    def test_afterTimeup_timeRemainingIsZero(self):
         self.timer.start(duration=DEFAULT_TEST_DURATION)
         self.waitForTimeup()
         self.assertEqual(0, self.timer.timeRemaining)
@@ -115,12 +121,12 @@ class TestKitchenTimer(unittest.TestCase):
             self.assertEqual((duration - elapsed), round(self.timer.timeRemaining, 1))
             
     def test_canQueryTimeRemainingWhileTimerIsRunning(self):
-        elapsed = 0.1
+        elapsed = 0.05
         duration = 3
         self.timer.start(duration)
         for i in range(1, 4):
             sleep(elapsed)
-            self.assertEqual((duration - (elapsed * i)), round(self.timer.timeRemaining, 1))
+            self.assertEqual((duration - (elapsed * i)), round(self.timer.timeRemaining, 2))
             
     def test_whatHappensWhenTheDurationIsVeryFast(self):
         self.skipTest("unable to reproduce race condition")
