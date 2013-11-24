@@ -10,15 +10,15 @@ ENOUGH_SECONDS_TO_EXPIRE = DEFAULT_BREAK_DURATION_MINS * 60 * 2
 class TestRestBreak(unittest.TestCase):
     '''Unit tests for Break class.'''
     
+    def setUp(self):
+        self.restBreak = Break(self.whenTimeup)
+
+    def whenTimeup(self):
+        self.timeUp = True
+                
     def assertNotRunningNorSkipped(self):
         self.assertFalse(self.restBreak.isRunning())
         self.assertFalse(self.restBreak.wasSkipped())
-
-    def setUp(self):
-        self.restBreak = Break(self.whenTimeup)
-                
-    def whenTimeup(self):
-        self.timeUp = True
 
     def assertRunning(self):
         return self.assertTrue(self.restBreak.isRunning())
