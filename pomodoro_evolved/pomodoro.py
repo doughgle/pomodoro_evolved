@@ -14,10 +14,10 @@ class Pomodoro(object):
       b) You stop it.
     '''
     
-    IDLE =          "idle"
-    RUNNING =       "running"
-    INTERRUPTED =   "interrupted"
-    COMPLETED =     "completed"
+    IDLE =          "IDLE"
+    RUNNING =       "RUNNING"
+    INTERRUPTED =   "INTERRUPTED"
+    COMPLETED =     "COMPLETED"
     
     def __init__(self, whenTimeup, durationInMins=25):
         self._state = self.IDLE
