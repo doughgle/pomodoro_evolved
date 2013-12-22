@@ -34,7 +34,7 @@ class TestRulesOfTheTechnique(unittest.TestCase):
     def assertLongBreak(self):
         return self.assertEqual("Long Break", self.timer.type)
         
-    def test_startWithAPomodoro(self):        
+    def test_startWithAPomodoro(self):
         self.timer = self.rules.newTimer()
         self.assertPomodoro()
                 

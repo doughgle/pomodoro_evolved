@@ -48,10 +48,10 @@ class NativeUI(tk.Tk):
         self.timer.start()
         self.drawClock()
         self.startStopButton.configure(text="Stop", command=self.onStop)
-        print "started %s!" %self.timerName
+        print "started %s!" % self.timerName
         
     def onStop(self):
-        if tkMessageBox.askyesno("", "Void this %s?" %self.timerName):
+        if tkMessageBox.askyesno("", "Void this %s?" % self.timerName):
             if self.timer.isRunning():
                 self.timer.stop()
                 print "stopped!"
@@ -62,7 +62,7 @@ class NativeUI(tk.Tk):
         Called by the timer in a separate thread when time's up.
         '''
         print "timeup!"
-        uiFunction = (tkMessageBox.showinfo, ("time's up", "%s Complete!" %self.timerName), {})
+        uiFunction = (tkMessageBox.showinfo, ("time's up", "%s Complete!" % self.timerName), {})
         self.uiQueue.put(uiFunction)
         self.newTimer(self.timer)
                 

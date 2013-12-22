@@ -12,7 +12,7 @@ class RulesOfTheTechnique(object):
       
     EVERY_FOUR_POMODOROS = 4
     
-    def __init__(self, pomodoroCls, shortBreakCls, longBreakCls, longBreakInterval=EVERY_FOUR_POMODOROS):        
+    def __init__(self, pomodoroCls, shortBreakCls, longBreakCls, longBreakInterval=EVERY_FOUR_POMODOROS):
         self.Pomodoro = pomodoroCls
         self.ShortBreak = shortBreakCls
         self.LongBreak = longBreakCls
@@ -30,7 +30,7 @@ class RulesOfTheTechnique(object):
     def isLongBreakTime(self):
         return self._completedPomodoros % self.longBreakInterval == 0
         
-    def newTimer(self, prevTimer=None):        
+    def newTimer(self, prevTimer=None):
         timer = self.Pomodoro()
         if prevTimer is not None:
             if isinstance(prevTimer, self.Pomodoro):
