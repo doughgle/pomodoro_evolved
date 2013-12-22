@@ -77,10 +77,11 @@ class KitchenTimer(object):
                     
     def _whenTimeup(self):
         with self._stateLock:
-            self._state = self.TIMEUP
-            self._timeRemaining = 0
-            if callable(self._userWhenTimeup):
-                self._userWhenTimeup()
-        
+            if self.isRunning():
+                self._state = self.TIMEUP
+                self._timeRemaining = 0
+                if callable(self._userWhenTimeup):
+                    self._userWhenTimeup()
+            
     def _elapsedTime(self):
         return time() - self._startTime

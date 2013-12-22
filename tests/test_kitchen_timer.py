@@ -4,7 +4,7 @@ from kitchen_timer import KitchenTimer
 from kitchen_timer import NotRunningError, AlreadyRunningError, TimeAlreadyUp
 from utils import minsToSecs
 
-DEFAULT_TEST_DURATION_MINS = 0.0005
+DEFAULT_TEST_DURATION_MINS = 0.0005 #about 30ms yaybo
 ENOUGH_TIME_TO_EXPIRE = DEFAULT_TEST_DURATION_MINS * 60 * 2
 
 class TestKitchenTimer(unittest.TestCase):
@@ -45,7 +45,7 @@ class TestKitchenTimer(unittest.TestCase):
         self.assertFalse(self.timer.isTimeup())
                         
     def test_afterInitialisation_timeRemainingInSecondsIsEquivalentToDurationInMins(self):
-        self.assertEqual(self.timer._durationInSecs, self.timer.timeRemaining)        
+        self.assertEqual(self.timer._durationInSecs, self.timer.timeRemaining)
 
     def test_afterStarting_TimerIsRunning(self):
         self.timer.start()
@@ -68,7 +68,7 @@ class TestKitchenTimer(unittest.TestCase):
         self.timeupCalled = False
         self.timer.start()
         sleep(ENOUGH_TIME_TO_EXPIRE)
-        self.assertTrue(self.timeupCalled)    
+        self.assertTrue(self.timeupCalled)
         
     def test_startingAfterTimeup_isATimerAlreadyFinishedException(self):
         self.timer.start()
@@ -81,7 +81,7 @@ class TestKitchenTimer(unittest.TestCase):
         self.assertRaises(NotRunningError, self.timer.stop)
         
     def test_stoppingWhenStopped_isANotRunningError(self):
-        self.assertRaises(NotRunningError, self.timer.stop)        
+        self.assertRaises(NotRunningError, self.timer.stop)
         
     def test_startingWhenStoppedRestartsTheTimer(self):
         self.timer.start()
@@ -143,20 +143,71 @@ class KitchenTimerConcurrencyTests(unittest.TestCase):
     '''Concurrency Tests for Kitchen Timer class.'''
     
     def setUp(self):
-        self.timer = KitchenTimer()
+        self.timer = KitchenTimer(whenTimeup=self.timeupCallback, durationInMins=DEFAULT_TEST_DURATION_MINS)
+
+    def timeupCallback(self):
+        self.timeupCalled = True
+            
+    def test_whatIfStopIsCalledByAnotherThreadJustAsTimesUp(self):
+        self.timeupCalled = False
+        self.timer = MockKitchenTimer(whenTimeup=self.timeupCallback, durationInMins=DEFAULT_TEST_DURATION_MINS)
+        # The timer thread will block when the timer expires, but before the callback
+        # is invoked.
+#        thread_1 = threading.Thread(target=self.timer.start)
+#        thread_1.start()
+        self.timer.start()
+        self.assertTrue(self.timer.isRunning())
+        sleep(0.05)
         
-    def test_ifStoppedBeforeTimeup_isStoppedShouldAlwaysBeTrue(self):
-        self.skipTest("unable to reliably reproduce race condition")
-        for duration in (DEFAULT_TEST_DURATION_MINS,
-                         DEFAULT_TEST_DURATION_MINS / 10,
-                         DEFAULT_TEST_DURATION_MINS / 100,
-                         DEFAULT_TEST_DURATION_MINS / 1000,
-                         DEFAULT_TEST_DURATION_MINS / 10000):
-            self.timer.start(duration)
-            self.timer.stop()
-            self.assertTrue(self.timer.isStopped())
-            self.assertFalse(self.timer.isRunning())
-            self.assertFalse(self.timer.isTimeup())
+        # The timer is now blocked at _whenTimeup. In the parent thread, we stop it.
+        self.timer.stop()
+        self.assertTrue(self.timer.isStopped())
+        
+        # Now allow the callback thread to resume.
+        self.timer.resume()
+        sleep(0.1)
+        self.assertFalse(self.timeupCalled, "timeup callback shouldn't have been called after stopping.")
+        self.assertTrue(self.timer.isStopped())
+        self.assertFalse(self.timer.isRunning())
+        self.assertFalse(self.timer.isTimeup())
+        
+    def test_whatIfIsRunningIsQueriedByAnotherThreadImmediatelyAfterStarting(self):
+        # TODO: needs to guarantee the race condition.
+        self.timeupCalled = False
+        self.timer = MockKitchenTimer(whenTimeup=self.timeupCallback, durationInMins=DEFAULT_TEST_DURATION_MINS)        
+        thread_1 = threading.Thread(target=self.timer.start)
+        thread_1.start()
+        self.assertTrue(self.timer.isRunning())
+        
+    def test_stateIsUpdateAtomically_soIdleRunningStoppedTimeup_areMutuallyExclusive(self):
+        pass
+        
+
+
+import threading
+
+class MockKitchenTimer(KitchenTimer):
+
+    _runningLock = threading.Condition()
+
+    def __init__(self, whenTimeup=None, durationInMins=1):
+        super(MockKitchenTimer, self).__init__(whenTimeup, durationInMins)
+    
+    def _whenTimeup(self):
+        '''
+        Note that a call to wait releases the lock.
+        '''
+        with self._runningLock:
+            self._runningLock.wait()
+        KitchenTimer._whenTimeup(self)
+
+    def resume(self):
+        with self._runningLock:
+            self._runningLock.notify()
+
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
