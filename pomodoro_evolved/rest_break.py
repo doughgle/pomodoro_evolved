@@ -1,4 +1,4 @@
-from kitchen_timer import KitchenTimer
+from kitchen_timer import KitchenTimer, AlreadyRunningError, TimeAlreadyUp, NotRunningError
 from utils import minsToSecs
 from math import ceil
 
@@ -23,15 +23,14 @@ class Break(object):
     
     def __init__(self, whenTimeup, durationInMins=5):
         self._state = self.IDLE
-        self._userWhenTimeup = whenTimeup
-        self._durationInMins = durationInMins
-        self._timer = KitchenTimer(self._whenTimeup, durationInMins)
+        self._canSkip = True
+        self._timer = KitchenTimer(whenTimeup, durationInMins)
             
     def skip(self):
         '''
         Skips this break forever.
         '''
-        if self._state == self.IDLE:
+        if self._canSkip:
             self._state = self.SKIPPED
         else:
             raise BreakCannotBeSkippedOnceStarted()
@@ -40,15 +39,19 @@ class Break(object):
         '''
         Starts the break counting down from the given durationInMins.
         '''
-        if self._state == self.IDLE:
-            self._timer.start()
-            self._state = self.RUNNING
-        elif self.wasSkipped():
+        if self.wasSkipped():
             raise BreakAlreadySkipped()
-        elif self.isRunning():
+        if self._timer.isStopped():
+            raise BreakAlreadyTerminated
+        
+        try:
+            self._timer.start()
+        except AlreadyRunningError:
             raise BreakAlreadyStarted()
-        else:
+        except TimeAlreadyUp:
             raise BreakAlreadyTerminated()
+        else:
+            self._canSkip = False
             
     def stop(self):
         '''
@@ -56,14 +59,14 @@ class Break(object):
         '''
         if self.wasSkipped():
             raise BreakAlreadySkipped()
-        elif not self.isRunning():
-            raise BreakNotStarted()
-        else:
+
+        try:
             self._timer.stop()
-            self._state = self.STOPPED
+        except NotRunningError:
+            raise BreakNotStarted()
             
     def isRunning(self):
-        return self._state == self.RUNNING
+        return self._timer.isRunning()
     
     def wasSkipped(self):
         return self._state == self.SKIPPED
@@ -73,12 +76,4 @@ class Break(object):
         '''
         Returns the time remaining in seconds.
         '''
-        if self._state == self.IDLE:
-            return ceil(minsToSecs(self._durationInMins))
-        else:
-            return ceil(self._timer.timeRemaining)
-    
-    def _whenTimeup(self):
-        self._state = self.TIMEUP
-        if callable(self._userWhenTimeup):
-            self._userWhenTimeup()
+        return ceil(self._timer.timeRemaining)

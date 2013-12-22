@@ -31,9 +31,6 @@ class TestRestBreak(unittest.TestCase):
         
     def test_afterCreationBreakIsNotSkipped(self):
         self.assertFalse(self.restBreak.wasSkipped())
-    
-    def test_afterCreation_timeRemainingInSecondsIsEquivalentToDurationInMinutes(self):
-        self.assertEqual((self.restBreak._durationInMins * 60), self.restBreak.timeRemaining)
             
     def test_afterSkipping_wasSkippedReturnsTrue(self):
         self.restBreak.skip()
