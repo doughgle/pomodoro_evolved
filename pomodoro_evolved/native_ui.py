@@ -12,7 +12,7 @@ class NativeUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.clockFont = tkFont.Font(family="Helvetica", size=18)
-        self.clock = tk.Label(self, width=10, font=self.clockFont)
+        self.clock = tk.Label(self, width=15, font=self.clockFont)
         self.startStopButton = tk.Button(self)
         self.clock.pack()
         self.startStopButton.pack()
