@@ -12,12 +12,7 @@ class Pomodoro(object):
     After starting, the Pomodoro is running until:
       a) You complete it.
       b) You stop it.
-    '''
-    
-    IDLE =          "IDLE"
-    RUNNING =       "RUNNING"
-    INTERRUPTED =   "INTERRUPTED"
-    COMPLETED =     "COMPLETED"
+    '''    
     
     def __init__(self, whenTimeup, durationInMins=25):
         self._timer = KitchenTimer(whenTimeup, durationInMins)
