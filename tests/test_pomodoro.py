@@ -16,8 +16,8 @@ class TestPomodoro(unittest.TestCase):
     def test_afterCreation_pomodoroIsNotInterrupted(self):
         self.assertFalse(self.pomodoro.wasInterrupted())
         
-    def test_afterCreation_timeRemainingInSecondsIsEquivalentToDurationInMinutes(self):
-        self.assertEqual((self.pomodoro._durationInMins * 60), self.pomodoro.timeRemaining)
+    def test_afterCreation_timeRemainingInSecondsIsEquivalentToTwentyFiveMinutes(self):
+        self.assertEqual(1500, self.pomodoro.timeRemaining)
         
     def test_interruptingAPomodoroThatIsNotRunningIsANotRunningException(self):
         self.assertRaises(PomodoroNotRunning, self.pomodoro.stop)
