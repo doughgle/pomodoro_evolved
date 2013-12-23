@@ -9,7 +9,7 @@ from rest_break import Break as LongBreak
 
 class NativeUI(tk.Tk):
     
-    def __init__(self):
+    def __init__(self, pomodoroDurationInMins=25, shortBreakDurationInMins=5, longBreakDurationInMins=15):
         tk.Tk.__init__(self)
         self.clockFont = tkFont.Font(family="Helvetica", size=18)
         self.clock = tk.Label(self, width=15, font=self.clockFont)
@@ -19,8 +19,11 @@ class NativeUI(tk.Tk):
         self.uiQueue = Queue()
         self._handleUiRequest()
         self._completedPomodoros = 0
+        self._pomodoroDurationInMins = pomodoroDurationInMins
+        self._shortBreakDurationInMins = shortBreakDurationInMins
+        self._longBreakDurationInMins = longBreakDurationInMins
         self.newTimer()
-
+    
     def isLongBreakTime(self):
         return self._completedPomodoros % 4 == 0
     
@@ -28,16 +31,16 @@ class NativeUI(tk.Tk):
         '''
         Set's up the next timer, whether it's a Pomodoro or a Break
         '''
-        self.timer = Pomodoro(self.whenTimeup, durationInMins=0.05)
+        self.timer = Pomodoro(self.whenTimeup, durationInMins=self._pomodoroDurationInMins)
         self.timerName = "Pomodoro"
         if prevTimer is not None:
             if isinstance(prevTimer, Pomodoro):
                 self._completedPomodoros += 1
                 if self.isLongBreakTime():
-                    self.timer = LongBreak(self.whenTimeup, durationInMins=0.1)
+                    self.timer = LongBreak(self.whenTimeup, durationInMins=self._longBreakDurationInMins)
                     self.timerName = "Long Break"
                 else:
-                    self.timer = ShortBreak(self.whenTimeup, durationInMins=0.02)
+                    self.timer = ShortBreak(self.whenTimeup, durationInMins=self._shortBreakDurationInMins)
                     self.timerName = "Short Break"
         
         self.title(self.timerName)
