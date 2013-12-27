@@ -2,6 +2,7 @@ from threading import Timer, Lock
 from time import time
 from utils import minsToSecs
 
+class NotStartedError(Exception): pass
 class NotRunningError(Exception): pass
 class AlreadyRunningError(Exception): pass
 class TimeAlreadyUp(Exception): pass
@@ -39,7 +40,7 @@ class KitchenTimer(object):
                 raise TimeAlreadyUp()
             else:
                 self._state = self.RUNNING
-                self._startTime = time()
+                self._startedAt = time()
                 self._timer = Timer(self._durationInSecs, self._whenTimeup)
                 self._timer.start()
         
@@ -74,6 +75,16 @@ class KitchenTimer(object):
         if self.isRunning():
             self._timeRemaining = self._durationInSecs - self._elapsedTime()
         return self._timeRemaining
+    
+    @property
+    def startedAt(self):
+        '''
+        Returns the time this timer was started in Unix timestamp format.
+        '''
+        try:
+            return self._startedAt
+        except AttributeError:
+            raise NotStartedError()
                     
     def _whenTimeup(self):
         with self._stateLock:
@@ -84,4 +95,4 @@ class KitchenTimer(object):
                     self._userWhenTimeup()
             
     def _elapsedTime(self):
-        return time() - self._startTime
+        return time() - self._startedAt
