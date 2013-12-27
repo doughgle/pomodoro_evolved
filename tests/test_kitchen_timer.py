@@ -129,14 +129,6 @@ class TestKitchenTimer(unittest.TestCase):
         for i in range(1, 4):
             sleep(elapsed)
             self.assertEqual((minsToSecs(duration) - (elapsed * i)), round(self.timer.timeRemaining, 2))
-            
-    def test_whatHappensWhenTheDurationIsVeryFast(self):
-        self.skipTest("unable to reproduce race condition")
-        self.timer.start(0.001)
-        sleep(0.0005)
-        self.timer.stop()
-        self.assertEqual(0, self.timer.timeRemaining)
-        self.assertTimeup()
 
 
 class KitchenTimerConcurrencyTests(unittest.TestCase):

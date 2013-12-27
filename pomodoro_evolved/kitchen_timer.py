@@ -67,7 +67,7 @@ class KitchenTimer(object):
     @property
     def timeRemaining(self):
         '''
-        Returns the time remaining in seconds.
+        Returns the time remaining in seconds. Gives fractions of a second if the system clock allows.
         '''
         if self._state == self.IDLE:
             return self._durationInSecs

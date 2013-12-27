@@ -7,7 +7,7 @@ from time import sleep
 DEFAULT_BREAK_DURATION_MINS = 0.0005
 ENOUGH_SECONDS_TO_EXPIRE = DEFAULT_BREAK_DURATION_MINS * 60 * 2
 
-class TestRestBreak(unittest.TestCase):
+class TestRestBreakBehaviour(unittest.TestCase):
     '''Unit tests for Break class.'''
     
     def setUp(self):
@@ -31,6 +31,10 @@ class TestRestBreak(unittest.TestCase):
         
     def test_afterCreationBreakIsNotSkipped(self):
         self.assertFalse(self.restBreak.wasSkipped())
+        
+    def test_afterCreation_timeRemainingShouldBe300Seconds(self):
+        self.restBreak = Break(self.whenTimeup, durationInMins=5)
+        self.assertEqual(300, self.restBreak.timeRemaining)
             
     def test_afterSkipping_wasSkippedReturnsTrue(self):
         self.restBreak.skip()

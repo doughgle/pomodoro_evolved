@@ -74,6 +74,6 @@ class Break(object):
     @property
     def timeRemaining(self):
         '''
-        Returns the time remaining in seconds.
+        Returns the number of whole seconds remaining.
         '''
         return ceil(self._timer.timeRemaining)
