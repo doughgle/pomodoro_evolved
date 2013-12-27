@@ -2,7 +2,7 @@ import unittest
 from time import sleep
 from kitchen_timer import KitchenTimer
 from kitchen_timer import NotRunningError, AlreadyRunningError, TimeAlreadyUp
-from kitchen_timer import NotStartedError
+from kitchen_timer import NotStartedError, NotEndedError
 from utils import minsToSecs
 
 DEFAULT_TEST_DURATION_MINS = 0.0005 #about 30ms yaybo
@@ -165,7 +165,7 @@ class KitchenTimerConcurrencyTests(unittest.TestCase):
         self.assertFalse(self.timer.isTimeup())
         
     def test_whatIfIsRunningIsQueriedByAnotherThreadImmediatelyAfterStarting(self):
-        # TODO: needs to guarantee the race condition.
+        self.skipTest("test needs to guarantee the race condition.")
         self.timeupCalled = False
         self.timer = MockKitchenTimer(whenTimeup=self.timeupCallback, durationInMins=DEFAULT_TEST_DURATION_MINS)        
         thread_1 = threading.Thread(target=self.timer.start)
@@ -181,15 +181,28 @@ from time import time
 class TestTimeStampingBehaviour(unittest.TestCase):
     '''Tests the time stamping of various timer state transitions.'''
     
+    def setUp(self):
+        self.timer = KitchenTimer()
+    
     def test_queryingStartTimeWhenNotYetStarted_isANotStartedError(self):
-        timer = KitchenTimer()
-        self.assertRaises(NotStartedError, getattr, timer, 'startedAt')
-        
+        self.assertRaises(NotStartedError, getattr, self.timer, 'startedAt')
+    
     def test_afterStarting_timeAndDateShouldBeLogged(self):
-        timer = KitchenTimer()
         timeBeforeStarting = time()
-        timer.start()
-        self.assertEqual(timeBeforeStarting, timer.startedAt)
+        self.timer.start()
+        self.assertEqual(timeBeforeStarting, self.timer.startedAt)
+        
+    def test_queryingEndedAtWhenNotEnded_isANotEndedError(self):
+        self.assertRaises(NotEndedError, getattr, self.timer, 'endedAt')
+        
+    def test_afterTimeup_timeAndDateShouldBeLogged(self):
+        self.timer = KitchenTimer(durationInMins=DEFAULT_TEST_DURATION_MINS)
+        timeBeforeStarting = time()
+        self.timer.start()
+        while not self.timer.isTimeup():
+            pass
+        self.assertLessEqual(timeBeforeStarting, self.timer.endedAt)
+    
 
 import threading
 
