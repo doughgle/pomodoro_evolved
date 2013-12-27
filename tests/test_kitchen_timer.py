@@ -202,6 +202,13 @@ class TestTimeStampingBehaviour(unittest.TestCase):
         while not self.timer.isTimeup():
             pass
         self.assertLessEqual(timeBeforeStarting, self.timer.endedAt)
+        
+    def test_afterStopping_timeAndDateShouldBeLogged(self):
+        self.timer = KitchenTimer(durationInMins=DEFAULT_TEST_DURATION_MINS)
+        timeBeforeStarting = time()
+        self.timer.start()
+        self.timer.stop()
+        self.assertLessEqual(timeBeforeStarting, self.timer.endedAt)
     
 
 import threading

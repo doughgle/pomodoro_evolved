@@ -53,6 +53,7 @@ class KitchenTimer(object):
             if self.isRunning():
                 self._timer.cancel()
                 self._state = self.STOPPED
+                self._endedAt = time()
                 self._timeRemaining = self._durationInSecs - self._elapsedTime()
             else:
                 raise NotRunningError()
