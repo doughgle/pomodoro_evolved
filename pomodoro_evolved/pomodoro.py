@@ -6,7 +6,7 @@ class PomodoroNotRunning(Exception): pass
 class PomodoroAlreadyStarted(Exception): pass
 
 
-class Pomodoro(object):
+class Pomodoro(KitchenTimer):
     '''
     A Pomodoro is the indivisable unit of time used to work on a task.
     After starting, the Pomodoro is running until:
@@ -15,30 +15,27 @@ class Pomodoro(object):
     '''    
     
     def __init__(self, whenTimeup, durationInMins=25):
-        self._timer = KitchenTimer(whenTimeup, durationInMins)
+        super(Pomodoro, self).__init__(whenTimeup, durationInMins)
             
     def start(self):
         try:
-            self._timer.start()
+            super(Pomodoro, self).start()
         except AlreadyRunningError:
             raise PomodoroAlreadyStarted()
                                 
     def stop(self):
         try:
-            self._timer.stop()
+            super(Pomodoro, self).stop()
         except NotRunningError:
             raise PomodoroNotRunning()
-
-    def isRunning(self):
-        return self._timer.isRunning()
-        
+       
     def wasInterrupted(self):
-        return self._timer.isStopped()
+        return super(Pomodoro, self).isStopped()
 
     @property
     def timeRemaining(self):
         '''Returns the number of whole seconds remaining.'''
-        return ceil(self._timer.timeRemaining)
+        return ceil(super(Pomodoro, self).timeRemaining)
 
         
 if __name__ == '__main__':
