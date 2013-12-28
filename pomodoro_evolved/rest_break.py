@@ -1,5 +1,4 @@
 from kitchen_timer import KitchenTimer, AlreadyRunningError, TimeAlreadyUp, NotRunningError
-from utils import minsToSecs
 from math import ceil
 
 class BreakAlreadySkipped(Exception): pass
