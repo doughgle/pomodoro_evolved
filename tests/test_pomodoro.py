@@ -2,7 +2,7 @@ import unittest
 from pomodoro import Pomodoro, PomodoroNotRunning, PomodoroAlreadyStarted
 from time import sleep
 
-class TestPomodoro(unittest.TestCase):
+class TestPomodoroBehaviour(unittest.TestCase):
 
     def setUp(self):
         self.pomodoro = Pomodoro(self.whenTimeup)
@@ -37,6 +37,10 @@ class TestPomodoro(unittest.TestCase):
         self.pomodoro.start()
         self.assertTrue(self.pomodoro.isRunning())
     
+    def test_afterStarting_canQueryTimeRemainingWhileRunning(self):
+        self.pomodoro.start()
+        self.assertEqual(1500, self.pomodoro.timeRemaining)
+        
     def test_afterInterrupting_wasInterruptedReturnsTrue(self):
         self.pomodoro.start()
         self.pomodoro.stop()
@@ -54,10 +58,6 @@ class TestPomodoro(unittest.TestCase):
         self.pomodoro.start()
         self.pomodoro.stop()
         self.assertFalse(self.pomodoro.isRunning())
-        
-    def test_canQueryTimeRemainingAtSecondIntervals(self):
-        self.pomodoro.start()
-        self.assertEqual(1500, self.pomodoro.timeRemaining)
         
     def test_afterPomodoroEnds_itsNoLongerRunningNorInterrupted(self):
         self.pomodoro = Pomodoro(self.whenTimeup, 0.001)

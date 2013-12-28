@@ -2,7 +2,9 @@ from threading import Timer, Lock
 from time import time
 from utils import minsToSecs
 
+class NotStartedError(Exception): pass
 class NotRunningError(Exception): pass
+class NotEndedError(Exception): pass
 class AlreadyRunningError(Exception): pass
 class TimeAlreadyUp(Exception): pass
 
@@ -39,7 +41,7 @@ class KitchenTimer(object):
                 raise TimeAlreadyUp()
             else:
                 self._state = self.RUNNING
-                self._startTime = time()
+                self._startedAt = time()
                 self._timer = Timer(self._durationInSecs, self._whenTimeup)
                 self._timer.start()
         
@@ -67,21 +69,42 @@ class KitchenTimer(object):
     @property
     def timeRemaining(self):
         '''
-        Returns the time remaining in seconds.
+        Returns the time remaining in seconds. Gives fractions of a second if the system clock allows.
         '''
         if self._state == self.IDLE:
             return self._durationInSecs
         if self.isRunning():
             self._timeRemaining = self._durationInSecs - self._elapsedTime()
         return self._timeRemaining
+    
+    @property
+    def startedAt(self):
+        '''
+        Returns the time this timer was started in Unix timestamp format.
+        '''
+        try:
+            return self._startedAt
+        except AttributeError:
+            raise NotStartedError()
+        
+    @property
+    def endedAt(self):
+        '''
+        Returns the time this timer ended (stopped or timeup) in Unix timestamp format.
+        '''
+        try:
+            return self._endedAt
+        except AttributeError:
+            raise NotEndedError()
                     
     def _whenTimeup(self):
         with self._stateLock:
             if self.isRunning():
                 self._state = self.TIMEUP
+                self._endedAt = time()
                 self._timeRemaining = 0
                 if callable(self._userWhenTimeup):
                     self._userWhenTimeup()
             
     def _elapsedTime(self):
-        return time() - self._startTime
+        return time() - self._startedAt

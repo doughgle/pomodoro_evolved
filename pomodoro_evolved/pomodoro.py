@@ -37,6 +37,7 @@ class Pomodoro(object):
 
     @property
     def timeRemaining(self):
+        '''Returns the number of whole seconds remaining.'''
         return ceil(self._timer.timeRemaining)
 
         
