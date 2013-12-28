@@ -2,7 +2,7 @@ import Tkinter as tk
 import tkFont
 import tkMessageBox
 from pomodoro import Pomodoro
-from datetime import timedelta
+from datetime import timedelta, datetime
 from Queue import Queue, Empty
 from rest_break import Break as ShortBreak
 from rest_break import Break as LongBreak
@@ -34,6 +34,11 @@ class NativeUI(tk.Tk):
         self.timer = Pomodoro(self.whenTimeup, durationInMins=self._pomodoroDurationInMins)
         self.timerName = "Pomodoro"
         if prevTimer is not None:
+            # log status of prevTimer before creating a new one.
+            print prevTimer.__class__.__name__,
+            print "started: ", datetime.fromtimestamp(prevTimer.startedAt).strftime('%a %x %H:%M:%S'),
+            print "ended: ", datetime.fromtimestamp(prevTimer.endedAt).strftime('%H:%M:%S')
+            
             if isinstance(prevTimer, Pomodoro):
                 self._completedPomodoros += 1
                 if self.isLongBreakTime():
