@@ -6,7 +6,7 @@ from datetime import timedelta, datetime
 from Queue import Queue, Empty
 from rest_break import Break as ShortBreak
 from rest_break import Break as LongBreak
-from test_time_logger import MockTimerLog as TimerLog
+from timer_log import TimerLog
 
 class NativeUI(tk.Tk):
     
