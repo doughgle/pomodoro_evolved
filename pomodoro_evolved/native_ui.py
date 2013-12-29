@@ -15,8 +15,10 @@ class NativeUI(tk.Tk):
         self.clockFont = tkFont.Font(family="Helvetica", size=18)
         self.clock = tk.Label(self, width=15, font=self.clockFont)
         self.startStopButton = tk.Button(self)
+        self.analyseButton = tk.Button(self, text="Analyse", command=self.onAnalyse)
         self.clock.pack()
         self.startStopButton.pack()
+        self.analyseButton.pack()
         self.uiQueue = Queue()
         self._handleUiRequest()
         self._completedPomodoros = 0
@@ -64,6 +66,10 @@ class NativeUI(tk.Tk):
                 self.timer.stop()
                 print "stopped!"
                 self.newTimer(self.timer)
+                
+    def onAnalyse(self):
+        print "showing log..."
+        print str(self._timerLog)
 
     def whenTimeup(self):
         '''

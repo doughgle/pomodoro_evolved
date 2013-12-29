@@ -1,9 +1,18 @@
 import unittest
 import os
-from mock import MagicMock
+from mock import MagicMock, Mock
 
-class MockTimerLog(MagicMock): 
-    pass
+class MockTimerLog(MagicMock):
+    
+    def __init__(self, *args, **kw):
+        MagicMock.__init__(self, *args, **kw)
+        self.__str__ = Mock(return_value="Pomodoro started:  Sun 12/29/13 11:13:12 ended:  11:13:13")
+        
+#    def __init__(self):
+#        super(MockTimerLog, self).__init__()
+
+#    def __str__(self):
+#        return Mock(return_value="Pomodoro started:  Sun 12/29/13 11:13:12 ended:  11:13:13")
 
 class TimerLog(list):
     '''
