@@ -1,6 +1,7 @@
 from threading import Timer, Lock
 from time import time
 from utils import minsToSecs
+from datetime import datetime
 
 class NotStartedError(Exception): pass
 class NotRunningError(Exception): pass
@@ -66,6 +67,13 @@ class KitchenTimer(object):
     def isTimeup(self):
         return self._state == self.TIMEUP
             
+    def addToLog(self, timerLog):
+        '''Adds itself to the given timerLog.'''
+        timerLog.add(name=self.__class__.__name__, startedAt=self.startedAt, endedAt=self.endedAt)
+        print self.__class__.__name__,
+        print "started: ", datetime.fromtimestamp(self.startedAt).strftime('%a %x %H:%M:%S'),
+        print "ended: ", datetime.fromtimestamp(self.endedAt).strftime('%H:%M:%S')
+
     @property
     def timeRemaining(self):
         '''

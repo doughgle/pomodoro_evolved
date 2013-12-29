@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 from Queue import Queue, Empty
 from rest_break import Break as ShortBreak
 from rest_break import Break as LongBreak
+from test_time_logger import MockTimerLog as TimerLog
 
 class NativeUI(tk.Tk):
     
@@ -22,6 +23,7 @@ class NativeUI(tk.Tk):
         self._pomodoroDurationInMins = pomodoroDurationInMins
         self._shortBreakDurationInMins = shortBreakDurationInMins
         self._longBreakDurationInMins = longBreakDurationInMins
+        self._timerLog = TimerLog()
         self.newTimer()
     
     def isLongBreakTime(self):
@@ -34,10 +36,8 @@ class NativeUI(tk.Tk):
         self.timer = Pomodoro(self.whenTimeup, durationInMins=self._pomodoroDurationInMins)
         self.timerName = "Pomodoro"
         if prevTimer is not None:
-            # log status of prevTimer before creating a new one.
-            print prevTimer.__class__.__name__,
-            print "started: ", datetime.fromtimestamp(prevTimer.startedAt).strftime('%a %x %H:%M:%S'),
-            print "ended: ", datetime.fromtimestamp(prevTimer.endedAt).strftime('%H:%M:%S')
+            # addToLog status of prevTimer before creating a new one.
+            prevTimer.addToLog(self._timerLog)            
             
             if isinstance(prevTimer, Pomodoro):
                 self._completedPomodoros += 1
