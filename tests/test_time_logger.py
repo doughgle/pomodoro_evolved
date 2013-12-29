@@ -51,7 +51,7 @@ class TestTimerLogPersistence(unittest.TestCase):
         self.assertEqual("Timer #1", log[-1].get("name"))
     
 
-class TestTimerLogBehaviour(unittest.TestCase):
+class TestTimerLogAddAndRetrieveBehaviour(unittest.TestCase):
 
     def setUp(self):
         self.log = TimerLog()
@@ -76,7 +76,13 @@ class TestTimerLogBehaviour(unittest.TestCase):
         self.log.add(name="Timer #1")
         self.log.add(name="Timer #2")
         self.assertEqual("Timer #2", self.log[-1].get("name"))
-        
+
+    def test_givenASingleDate_canRetrieveLoggedTimersForThatDate(self):
+        self.skipTest("is it just getter setter behaviour?")
+        usedTimer = MockTimer()
+        self.log.add(usedTimer)
+        self.log.add(usedTimer)
+        self.log.getTimersByDate("28/12/13")
 
 
 class TestTimerLogFormatting(unittest.TestCase):
@@ -92,20 +98,6 @@ class TestTimerLogFormatting(unittest.TestCase):
         usedTimer = MockTimer()
         self.log.add(usedTimer)
         self.assertEqual("MockTimer, started: 1388240204 ended: 1388240205", str(self.log[0]))
-
-    def test_givenASingleDate_canRetrieveLoggedTimersForThatDate(self):
-        self.skipTest("is it just getter setter behaviour?")
-        usedTimer = MockTimer()
-        self.log.add(usedTimer)
-        self.log.add(usedTimer)
-        self.log.getTimersByDate("28/12/13")    
-        
-    def test_givenAUsedTimer_startTimeShouldBeLogged(self):
-        self.skipTest("too advanced!")
-        usedTimer = MockTimer()
-        self.log.add(usedTimer)
-        self.assertEqual("MockTimer", self.log.getItem(1).type)
-
 
 
 if __name__ == "__main__":
