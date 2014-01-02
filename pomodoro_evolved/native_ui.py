@@ -42,7 +42,7 @@ class NativeUI(tk.Tk):
                 else:
                     self.timer = ShortBreak(self.whenTimeup, durationInMins=self._shortBreakDurationInMins)
                     self.timerName = "Short Break"
-        
+         
         self.title(self.timerName)
         self.clock.configure(text=str(timedelta(seconds=self.timer.timeRemaining)))
         self.startStopButton.configure(text="Start", command=self.onStart)
@@ -67,8 +67,9 @@ class NativeUI(tk.Tk):
         print "timeup!"
         uiFunction = (tkMessageBox.showinfo, ("time's up", "%s Complete!" % self.timerName), {})
         self.uiQueue.put(uiFunction)
-        self.newTimer(self.timer)
-                
+        newTimerFunction = (self.newTimer, (self.timer,), {})
+        self.uiQueue.put(newTimerFunction)
+
     def drawClock(self):
         if self.timer.isRunning():
             self.clock.configure(text=str(timedelta(seconds=self.timer.timeRemaining)))

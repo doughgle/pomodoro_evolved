@@ -190,7 +190,7 @@ class TestTimeStampingBehaviour(unittest.TestCase):
     def test_afterStarting_timeAndDateShouldBeLogged(self):
         timeBeforeStarting = time()
         self.timer.start()
-        self.assertEqual(timeBeforeStarting, self.timer.startedAt)
+        self.assertLessEqual(timeBeforeStarting, self.timer.startedAt)
         
     def test_queryingEndedAtWhenNotEnded_isANotEndedError(self):
         self.assertRaises(NotEndedError, getattr, self.timer, 'endedAt')
