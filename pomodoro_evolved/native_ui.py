@@ -67,8 +67,9 @@ class NativeUI(tk.Tk):
         print "timeup!"
         uiFunction = (tkMessageBox.showinfo, ("time's up", "%s Complete!" % self.timerName), {})
         self.uiQueue.put(uiFunction)
-        self.newTimer(self.timer)
-                
+        newTimerFunction = (self.newTimer, (self.timer,), {})
+        self.uiQueue.put(newTimerFunction)
+
     def drawClock(self):
         if self.timer.isRunning():
             self.clock.configure(text=str(timedelta(seconds=self.timer.timeRemaining)))
