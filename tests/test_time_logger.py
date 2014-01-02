@@ -15,41 +15,31 @@ class TestTimerLogPersistence(unittest.TestCase):
     
     def setUp(self):
         self.log = TimerLog()
-
-    def tearDown(self):
-        pass
         
     def test_canSaveLogToFile(self):
-        # delete test log file if exists
+        '''
+        Tests that file will be created when TimerLog instance is saved.
+        '''
+        file_path = 'test_canSaveLogToFile.log'
         try:
-            os.remove('test.log')
+            # delete test log file if exists
+            os.remove(file_path)
         except OSError:
             pass
-        self.log.save('test.log')
-        self.assertTrue(os.path.exists('test.log'))
-        os.remove('test.log')
-        
-    def test_canRestoreLogFromFile(self):
-        # arrange
-        self.skipTest("speech marks do not compare equal!")
-        logfile = open('test_restore.log', 'w')
-        logfile.write('[{"startedAt": 0, "endedAt": 1, "type": "MockTimer"}]')
-        logfile.close()
-        # act
-        self.log.restore('test_restore.log')
-        # assert
-        self.assertEqual('[{"startedAt": 0, "endedAt": 1, "type": "MockTimer"}]', str(self.log))
+        self.log.save(file_path)
+        self.assertTrue(os.path.exists(file_path))
 
     def test_afterLoggingOneTimer_Saving_AndTearingDown_loggedTimerCanBeRecovered(self):
         '''
         The timer log can be saved, deleted and then recovered from a file.
         This tests that the timer name can is recovered.
         '''
+        file_path = 'test_afterLoggingOneTimer_Saving_AndTearingDown_loggedTimerCanBeRecovered.log'
         self.log.addTimer(name="Timer #1")
-        self.log.save('recovery_test.log')
+        self.log.save(file_path)
         del self.log
         log = TimerLog()
-        log.restore('recovery_test.log')
+        log.restore(file_path)
         self.assertEqual("Timer #1", log[-1].get("name"))
     
 
