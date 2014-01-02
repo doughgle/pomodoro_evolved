@@ -22,7 +22,7 @@ class TimerLog(list):
         self._entire_formatted_log = ''
         super(TimerLog, self).__init__()
     
-    def add(self, loggedTimer=None, name='undefined', startedAt=None, endedAt=None):
+    def addTimer(self, loggedTimer=None, name='undefined', startedAt=None, endedAt=None):
         loggedTimer = {'name': name}
         super(TimerLog, self).append(loggedTimer)
     
@@ -31,19 +31,16 @@ class TimerLog(list):
         Saves this log to a given file path.
         '''
         logfile = open(file_path, 'w')
-#        logfile.write(jsonpickle.encode(self, max_depth=2))
-        print "before pickling= ", self
         pickled = jsonpickle.encode(self)
-        print "pickled= ", pickled 
         logfile.write(pickled)
         logfile.close()
 
     def restore(self, file_path):
+        '''
+        Restores log data from the given file path to this log.
+        '''
         logfile = open(file_path, 'r')
         self._entire_formatted_log = logfile.read()
-        print "restored= ", self._entire_formatted_log
-        unpickled = jsonpickle.decode(self._entire_formatted_log)        
-        print "after unpickling= ", unpickled
+        unpickled = jsonpickle.decode(self._entire_formatted_log)
         self.extend(unpickled)
-        print "extended= ", self
         logfile.close()

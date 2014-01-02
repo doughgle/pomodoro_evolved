@@ -41,11 +41,13 @@ class TestTimerLogPersistence(unittest.TestCase):
         self.assertEqual('[{"startedAt": 0, "endedAt": 1, "type": "MockTimer"}]', str(self.log))
 
     def test_afterLoggingOneTimer_Saving_AndTearingDown_loggedTimerCanBeRecovered(self):
-        self.skipTest("One timer is mysteriously added to the log after unpickling!??")
-        self.log.add(name="Timer #1")
+        '''
+        The timer log can be saved, deleted and then recovered from a file.
+        This tests that the timer name can is recovered.
+        '''
+        self.log.addTimer(name="Timer #1")
         self.log.save('recovery_test.log')
         del self.log
-        
         log = TimerLog()
         log.restore('recovery_test.log')
         self.assertEqual("Timer #1", log[-1].get("name"))
@@ -60,28 +62,28 @@ class TestTimerLogAddAndRetrieveBehaviour(unittest.TestCase):
         self.assertEqual(0, len(self.log))
         
     def test_afterAddingOneTimerData_timerLogLengthShouldBeOne(self):
-        self.log.add(name="Timer #1")
+        self.log.addTimer(name="Timer #1")
         self.assertEqual(1, len(self.log))
 
     def test_afterAddingTwoTimersData_timerLogLengthShouldBeTwo(self):
-        self.log.add(name="Timer #1")
-        self.log.add(name="Timer #2")
+        self.log.addTimer(name="Timer #1")
+        self.log.addTimer(name="Timer #2")
         self.assertEqual(2, len(self.log))
 
     def test_afterAddingOneTimer_firstElementInLogShouldBeThatOne(self):
-        self.log.add(name="Dummy Timer")
+        self.log.addTimer(name="Dummy Timer")
         self.assertEqual("Dummy Timer", self.log[0].get("name"))
         
     def test_afterAddingTwoTimers_lastElementInLogShouldBeTimer2(self):
-        self.log.add(name="Timer #1")
-        self.log.add(name="Timer #2")
+        self.log.addTimer(name="Timer #1")
+        self.log.addTimer(name="Timer #2")
         self.assertEqual("Timer #2", self.log[-1].get("name"))
 
     def test_givenASingleDate_canRetrieveLoggedTimersForThatDate(self):
         self.skipTest("is it just getter setter behaviour?")
         usedTimer = MockTimer()
-        self.log.add(usedTimer)
-        self.log.add(usedTimer)
+        self.log.addTimer(usedTimer)
+        self.log.addTimer(usedTimer)
         self.log.getTimersByDate("28/12/13")
 
 
@@ -96,7 +98,7 @@ class TestTimerLogFormatting(unittest.TestCase):
     def test_canPrintTheDetailsOfTheFirstElementInTheLog(self):
         self.skipTest("is this a formatting test?")
         usedTimer = MockTimer()
-        self.log.add(usedTimer)
+        self.log.addTimer(usedTimer)
         self.assertEqual("MockTimer, started: 1388240204 ended: 1388240205", str(self.log[0]))
 
 

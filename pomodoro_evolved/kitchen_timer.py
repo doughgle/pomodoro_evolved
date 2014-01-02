@@ -69,7 +69,7 @@ class KitchenTimer(object):
             
     def addToLog(self, timerLog):
         '''Adds itself to the given timerLog.'''
-        timerLog.add(name=self.__class__.__name__, startedAt=self.startedAt, endedAt=self.endedAt)
+        timerLog.addTimer(name=self.__class__.__name__, startedAt=self.startedAt, endedAt=self.endedAt)
         print self.__class__.__name__,
         print "started: ", datetime.fromtimestamp(self.startedAt).strftime('%a %x %H:%M:%S'),
         print "ended: ", datetime.fromtimestamp(self.endedAt).strftime('%H:%M:%S')
