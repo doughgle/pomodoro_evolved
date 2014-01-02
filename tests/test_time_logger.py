@@ -34,9 +34,9 @@ class TestTimerLogPersistence(unittest.TestCase):
         self.skipTest("speech marks do not compare equal!")
         logfile = open('test_restore.log', 'w')
         logfile.write('[{"startedAt": 0, "endedAt": 1, "type": "MockTimer"}]')
-        logfile.close()        
+        logfile.close()
         # act
-        self.log.restore('test_restore.log')        
+        self.log.restore('test_restore.log')
         # assert
         self.assertEqual('[{"startedAt": 0, "endedAt": 1, "type": "MockTimer"}]', str(self.log))
 
@@ -92,7 +92,7 @@ class TestTimerLogFormatting(unittest.TestCase):
     def setUp(self):
         self.log = TimerLog()
 
-    def test_canPrintEntireLogInHumanReadableFormat(self):        
+    def test_canPrintEntireLogInHumanReadableFormat(self):
         self.assertEqual('[]', str(self.log))
             
     def test_canPrintTheDetailsOfTheFirstElementInTheLog(self):
