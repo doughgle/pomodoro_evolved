@@ -23,13 +23,14 @@ class KitchenTimer(object):
     STOPPED = "STOPPED"
     TIMEUP  = "TIMEUP"
     
-    def __init__(self, whenTimeup=None, durationInMins=1):
+    def __init__(self, whenTimeup=None, durationInMins=1, name='Kitchen Timer'):
         self._stateLock = Lock()
         with self._stateLock:
             self._state = self.IDLE
             self._userWhenTimeup = whenTimeup
             self._durationInSecs = minsToSecs(durationInMins)
             self._timeRemaining = 0
+            self.name = name
                     
     def start(self):
         '''
@@ -70,8 +71,8 @@ class KitchenTimer(object):
             
     def addToLog(self, timerLog):
         '''Adds itself to the given timerLog.'''
-        timerLog.addTimer(name=self.__class__.__name__, startedAt=self.startedAt, endedAt=self.endedAt)
-        print self.__class__.__name__,
+        timerLog.addTimer(name=self.name, startedAt=self.startedAt, endedAt=self.endedAt)
+        print self.name,
         print "started: ", datetime.fromtimestamp(self.startedAt).strftime('%a %x %H:%M:%S'),
         print "ended: ", datetime.fromtimestamp(self.endedAt).strftime('%H:%M:%S')
 

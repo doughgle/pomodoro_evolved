@@ -20,10 +20,10 @@ class Break(KitchenTimer):
     STOPPED =   "STOPPED"
     TIMEUP =    "TIMEUP"
     
-    def __init__(self, whenTimeup, durationInMins=5):
+    def __init__(self, whenTimeup, durationInMins=5, name='Break'):
         self._state = self.IDLE
         self._canSkip = True
-        super(Break, self).__init__(whenTimeup, durationInMins)
+        super(Break, self).__init__(whenTimeup, durationInMins, name)
 
     def skip(self):
         '''

@@ -14,8 +14,8 @@ class Pomodoro(KitchenTimer):
       b) You stop it.
     '''    
     
-    def __init__(self, whenTimeup, durationInMins=25):
-        super(Pomodoro, self).__init__(whenTimeup, durationInMins)
+    def __init__(self, whenTimeup, durationInMins=25, name='Pomodoro'):
+        super(Pomodoro, self).__init__(whenTimeup, durationInMins, name)
             
     def start(self):
         try:

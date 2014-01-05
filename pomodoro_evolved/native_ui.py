@@ -35,8 +35,7 @@ class NativeUI(tk.Tk):
         '''
         Set's up the next timer, whether it's a Pomodoro or a Break
         '''
-        self.timer = Pomodoro(self.whenTimeup, durationInMins=self._pomodoroDurationInMins)
-        self.timerName = "Pomodoro"
+        self.timer = Pomodoro(self.whenTimeup, durationInMins=self._pomodoroDurationInMins, name="Pomodoro")
         if prevTimer is not None:
             # addToLog status of prevTimer before creating a new one.
             prevTimer.addToLog(self._timerLog)            
@@ -44,13 +43,15 @@ class NativeUI(tk.Tk):
             if isinstance(prevTimer, Pomodoro):
                 self._completedPomodoros += 1
                 if self.isLongBreakTime():
-                    self.timer = LongBreak(self.whenTimeup, durationInMins=self._longBreakDurationInMins)
-                    self.timerName = "Long Break"
+                    self.timer = LongBreak(self.whenTimeup, 
+                                           durationInMins=self._longBreakDurationInMins, 
+                                           name="Long Break")
                 else:
-                    self.timer = ShortBreak(self.whenTimeup, durationInMins=self._shortBreakDurationInMins)
-                    self.timerName = "Short Break"
+                    self.timer = ShortBreak(self.whenTimeup, 
+                                            durationInMins=self._shortBreakDurationInMins, 
+                                            name="Short Break")
          
-        self.title(self.timerName)
+        self.title(self.timer.name)
         self.clock.configure(text=str(timedelta(seconds=self.timer.timeRemaining)))
         self.startStopButton.configure(text="Start", command=self.onStart)
         
@@ -58,10 +59,10 @@ class NativeUI(tk.Tk):
         self.timer.start()
         self.drawClock()
         self.startStopButton.configure(text="Stop", command=self.onStop)
-        print "started %s!" % self.timerName
+        print "started %s!" % self.timer.name
         
     def onStop(self):
-        if tkMessageBox.askyesno("", "Void this %s?" % self.timerName):
+        if tkMessageBox.askyesno("", "Void this %s?" % self.timer.name):
             if self.timer.isRunning():
                 self.timer.stop()
                 print "stopped!"
@@ -76,7 +77,7 @@ class NativeUI(tk.Tk):
         Called by the timer in a separate thread when time's up.
         '''
         print "timeup!"
-        uiFunction = (tkMessageBox.showinfo, ("time's up", "%s Complete!" % self.timerName), {})
+        uiFunction = (tkMessageBox.showinfo, ("time's up", "%s Complete!" % self.timer.name), {})
         self.uiQueue.put(uiFunction)
         newTimerFunction = (self.newTimer, (self.timer,), {})
         self.uiQueue.put(newTimerFunction)
