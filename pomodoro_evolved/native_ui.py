@@ -2,10 +2,11 @@ import Tkinter as tk
 import tkFont
 import tkMessageBox
 from pomodoro import Pomodoro
-from datetime import timedelta
+from datetime import timedelta, datetime
 from Queue import Queue, Empty
 from rest_break import Break as ShortBreak
 from rest_break import Break as LongBreak
+from timer_log import TimerLog
 
 class NativeUI(tk.Tk):
     
@@ -14,14 +15,17 @@ class NativeUI(tk.Tk):
         self.clockFont = tkFont.Font(family="Helvetica", size=18)
         self.clock = tk.Label(self, width=15, font=self.clockFont)
         self.startStopButton = tk.Button(self)
+        self.analyseButton = tk.Button(self, text="Analyse", command=self.onAnalyse)
         self.clock.pack()
         self.startStopButton.pack()
+        self.analyseButton.pack()
         self.uiQueue = Queue()
         self._handleUiRequest()
         self._completedPomodoros = 0
         self._pomodoroDurationInMins = pomodoroDurationInMins
         self._shortBreakDurationInMins = shortBreakDurationInMins
         self._longBreakDurationInMins = longBreakDurationInMins
+        self._timerLog = TimerLog()
         self.newTimer()
     
     def isLongBreakTime(self):
@@ -34,6 +38,9 @@ class NativeUI(tk.Tk):
         self.timer = Pomodoro(self.whenTimeup, durationInMins=self._pomodoroDurationInMins)
         self.timerName = "Pomodoro"
         if prevTimer is not None:
+            # addToLog status of prevTimer before creating a new one.
+            prevTimer.addToLog(self._timerLog)            
+            
             if isinstance(prevTimer, Pomodoro):
                 self._completedPomodoros += 1
                 if self.isLongBreakTime():
@@ -59,6 +66,10 @@ class NativeUI(tk.Tk):
                 self.timer.stop()
                 print "stopped!"
                 self.newTimer(self.timer)
+                
+    def onAnalyse(self):
+        print "showing log..."
+        print str(self._timerLog)
 
     def whenTimeup(self):
         '''

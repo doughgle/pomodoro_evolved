@@ -7,7 +7,7 @@ class BreakAlreadyStarted(Exception): pass
 class BreakNotStarted(Exception): pass
 class BreakAlreadyTerminated(Exception): pass
 
-class Break(object):
+class Break(KitchenTimer):
     '''
     Models a timed rest break with a default duration of 5 minutes.
     Allows the break to be skipped before starting.
@@ -23,8 +23,8 @@ class Break(object):
     def __init__(self, whenTimeup, durationInMins=5):
         self._state = self.IDLE
         self._canSkip = True
-        self._timer = KitchenTimer(whenTimeup, durationInMins)
-            
+        super(Break, self).__init__(whenTimeup, durationInMins)
+
     def skip(self):
         '''
         Skips this break forever.
@@ -40,11 +40,11 @@ class Break(object):
         '''
         if self.wasSkipped():
             raise BreakAlreadySkipped()
-        if self._timer.isStopped():
-            raise BreakAlreadyTerminated
+        if self.isStopped():
+            raise BreakAlreadyTerminated()
         
         try:
-            self._timer.start()
+            super(Break, self).start()
         except AlreadyRunningError:
             raise BreakAlreadyStarted()
         except TimeAlreadyUp:
@@ -60,12 +60,9 @@ class Break(object):
             raise BreakAlreadySkipped()
 
         try:
-            self._timer.stop()
+            super(Break, self).stop()
         except NotRunningError:
             raise BreakNotStarted()
-            
-    def isRunning(self):
-        return self._timer.isRunning()
     
     def wasSkipped(self):
         return self._state == self.SKIPPED
@@ -75,4 +72,4 @@ class Break(object):
         '''
         Returns the number of whole seconds remaining.
         '''
-        return ceil(self._timer.timeRemaining)
+        return ceil(super(Break, self).timeRemaining)
