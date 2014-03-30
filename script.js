@@ -1,6 +1,9 @@
-var seconds = 1500;
+var seconds = 1;
 
 $(document).ready(function(){
+	
+	timer = new Timer(whenTimeup, durationInMins=0.03);
+	drawClock();
 	
 	$('#start').click(function() {
 		onStart();
@@ -18,26 +21,50 @@ $(document).ready(function(){
  
 function onStart() {
 	drawClock();
-	countdownTimer = setInterval('drawClock()', 1000);
+	timer.start();
 }
 
 function onStop() {
 	clearInterval(countdownTimer);
 }
 
+function tick() {
+	timer.tick();
+	drawClock();
+}
+
+function whenTimeup() {
+	alert("Time's up!");
+}
+
 function drawClock() {
-	  var minutes = Math.round((seconds - 30)/60),
-	      remainingSeconds = seconds % 60;
-	  
+	  var seconds = timer.durationInSeconds;
+	  var minutes = Math.round((seconds - 30)/60);
+	  var remainingSeconds = Math.ceil(seconds % 60);
 	  if (remainingSeconds < 10) {
 	    remainingSeconds = "0" + remainingSeconds;  
 	  }
-	  
 	  document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
-	  if (seconds == 0) {
-	    clearInterval(countdownTimer);
+
+	  if (seconds <= 0) {
 	    document.getElementById('countdown').innerHTML = "00:00";
-	  } else {
-	    seconds--;
 	  }
 }
+
+Timer = function(whenTimeup, durationInMins) {
+	this.whenTimeup = whenTimeup;
+	this.durationInSeconds = durationInMins * 60;
+};
+
+Timer.prototype.start = function() {
+	countdownTimer = setInterval('tick()', 1000);
+};
+
+Timer.prototype.tick = function() {
+	if(this.durationInSeconds <= 0) {
+		clearInterval(countdownTimer);
+		this.whenTimeup();
+	}
+	else this.durationInSeconds--;
+};
+
