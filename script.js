@@ -17,6 +17,7 @@ $(document).ready(function(){
 });
  
 function start() {
+	secondPassed();
 	countdownTimer = setInterval('secondPassed()', 1000);
 }
 
