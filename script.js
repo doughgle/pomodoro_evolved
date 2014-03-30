@@ -3,29 +3,29 @@ var seconds = 1500;
 $(document).ready(function(){
 	
 	$('#start').click(function() {
-		start();
+		onStart();
 		$("#start").attr("disabled", "disabled");
 		console.log("started!")
 	});
 
 	$('#stop').click(function() {
-		stop();
+		onStop();
 		$("#start").removeAttr("disabled");
 		console.log("stopped!")
 	});
 	
 });
  
-function start() {
-	secondPassed();
-	countdownTimer = setInterval('secondPassed()', 1000);
+function onStart() {
+	drawClock();
+	countdownTimer = setInterval('drawClock()', 1000);
 }
 
-function stop() {
+function onStop() {
 	clearInterval(countdownTimer);
 }
 
-function secondPassed() {
+function drawClock() {
 	  var minutes = Math.round((seconds - 30)/60),
 	      remainingSeconds = seconds % 60;
 	  
@@ -41,4 +41,3 @@ function secondPassed() {
 	    seconds--;
 	  }
 }
-
