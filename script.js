@@ -57,8 +57,11 @@ function drawStatus() {
 function drawClock() {
 	  var seconds = timer.durationInSeconds;
 	  var minutes = Math.round((seconds - 30)/60);
+	  if(minutes < 10) {
+		  minutes = "0" + minutes;  
+	  }
 	  var remainingSeconds = Math.ceil(seconds % 60);
-	  if (remainingSeconds < 10) {
+	  if(remainingSeconds < 10) {
 	    remainingSeconds = "0" + remainingSeconds;  
 	  }
 	  document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
