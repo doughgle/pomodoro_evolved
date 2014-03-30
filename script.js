@@ -1,9 +1,6 @@
-var seconds = 1;
-
 $(document).ready(function(){
 	
-	timer = new Timer(whenTimeup, durationInMins=0.03);
-	drawClock();
+	newTimer();
 	
 	$('#start').click(function() {
 		onStart();
@@ -18,7 +15,18 @@ $(document).ready(function(){
 	});
 	
 });
- 
+
+function newTimer(prevTimer) {
+
+	timer = new Timer(whenTimeup, durationInMins=0.03);
+
+    if(typeof prevTimer !== 'undefined') {
+    	    	
+    }
+    
+    drawClock();
+}
+
 function onStart() {
 	drawClock();
 	timer.start();
@@ -35,6 +43,8 @@ function tick() {
 
 function whenTimeup() {
 	alert("Time's up!");
+	newTimer(prevTimer=timer);
+	$("#start").removeAttr("disabled");
 }
 
 function drawClock() {
@@ -67,4 +77,3 @@ Timer.prototype.tick = function() {
 	}
 	else this.durationInSeconds--;
 };
-
