@@ -18,13 +18,16 @@ $(document).ready(function(){
 
 function newTimer(prevTimer) {
 
-	timer = new Timer(whenTimeup, durationInMins=0.03);
+	timer = new Timer(whenTimeup, durationInMins=0.03, name="Pomodoro");
 
     if(typeof prevTimer !== 'undefined') {
-    	    	
+    	if(prevTimer.name === 'Pomodoro') {
+    		timer = new Timer(whenTimeup, durationInMins=0.01, name="Short Break");    		
+    	}
     }
     
     drawClock();
+    drawStatus();
 }
 
 function onStart() {
@@ -43,8 +46,12 @@ function tick() {
 
 function whenTimeup() {
 	alert("Time's up!");
-	newTimer(prevTimer=timer);
+	newTimer(timer);
 	$("#start").removeAttr("disabled");
+}
+
+function drawStatus() {
+	$('#timerName').text(timer.name);
 }
 
 function drawClock() {
@@ -61,9 +68,10 @@ function drawClock() {
 	  }
 }
 
-Timer = function(whenTimeup, durationInMins) {
+Timer = function(whenTimeup, durationInMins, name) {
 	this.whenTimeup = whenTimeup;
 	this.durationInSeconds = durationInMins * 60;
+	this.name = name;
 };
 
 Timer.prototype.start = function() {
