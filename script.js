@@ -1,5 +1,7 @@
+
 $(document).ready(function(){
 	
+	completedPomodoros = 0;
 	newTimer();
 	
 	$('#start').click(function() {
@@ -22,7 +24,13 @@ function newTimer(prevTimer) {
 
     if(typeof prevTimer !== 'undefined') {
     	if(prevTimer.name === 'Pomodoro') {
-    		timer = new Timer(whenTimeup, durationInMins=0.01, name="Short Break");    		
+    		completedPomodoros++;
+    		if(completedPomodoros % 2 == 0) {
+    			timer = new Timer(whenTimeup, durationInMins=0.01, name="Long Break");
+    		}
+    		else {
+    			timer = new Timer(whenTimeup, durationInMins=0.01, name="Short Break");    		
+    		}
     	}
     }
     
