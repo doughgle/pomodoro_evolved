@@ -2,7 +2,8 @@
 $(document).ready(function(){
 	
 	completedPomodoros = 0;
-	newTimer();
+	technique = new Technique(0.01, 0.01, 0.01); 
+	technique.newTimer();
 	
 	$('#start').click(function() {
 		onStart();
@@ -18,18 +19,24 @@ $(document).ready(function(){
 	
 });
 
-function newTimer(prevTimer) {
+Technique = function(pomodoroDurationMins, shortBreakDurationMins, longBreakDurationMins) {
+	this.pomodoroDurationMins = pomodoroDurationMins;
+	this.shortBreakDurationMins = shortBreakDurationMins;
+	this.longBreakDurationMins = longBreakDurationMins;
+};
 
-	timer = new Timer(whenTimeup, durationInMins=0.01, name="Pomodoro");
+Technique.prototype.newTimer = function(prevTimer) {
+
+	timer = new Timer(whenTimeup, durationInMins=this.pomodoroDurationMins, name="Pomodoro");
 
     if(typeof prevTimer !== 'undefined') {
     	if(prevTimer.name === 'Pomodoro') {
     		completedPomodoros++;
     		if(completedPomodoros % 4 == 0) {
-    			timer = new Timer(whenTimeup, durationInMins=0.01, name="Long Break");
+    			timer = new Timer(whenTimeup, this.longBreakDurationMins, name="Long Break");
     		}
     		else {
-    			timer = new Timer(whenTimeup, durationInMins=0.01, name="Short Break");    		
+    			timer = new Timer(whenTimeup, this.shortBreakDurationMins, name="Short Break");    		
     		}
     	}
     }
@@ -55,7 +62,7 @@ function tick() {
 
 function whenTimeup() {
 	alert("Time's up!");
-	newTimer(timer);
+	technique.newTimer(timer);
 	$("#start").removeAttr("disabled");
 }
 
