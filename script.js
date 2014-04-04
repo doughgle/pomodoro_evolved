@@ -34,8 +34,9 @@ function newTimer(prevTimer) {
     	}
     }
     
-    drawClock();
     drawStatus();
+    drawClock();
+    drawCompleted();
 }
 
 function onStart() {
@@ -77,6 +78,10 @@ function drawClock() {
 	  if (seconds <= 0) {
 	    document.getElementById('countdown').innerHTML = "00:00";
 	  }
+}
+
+function drawCompleted() {
+	$('#completed').text(completedPomodoros);
 }
 
 Timer = function(whenTimeup, durationInMins, name) {
