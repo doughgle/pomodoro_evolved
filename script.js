@@ -1,7 +1,6 @@
 
 $(document).ready(function(){
 	
-	completedPomodoros = 0;
 	technique = new Technique(0.01, 0.01, 0.01); 
 	technique.newTimer();
 	
@@ -23,6 +22,7 @@ Technique = function(pomodoroDurationMins, shortBreakDurationMins, longBreakDura
 	this.pomodoroDurationMins = pomodoroDurationMins;
 	this.shortBreakDurationMins = shortBreakDurationMins;
 	this.longBreakDurationMins = longBreakDurationMins;
+	this.completedPomodoros = 0;
 };
 
 Technique.prototype.newTimer = function(prevTimer) {
@@ -31,8 +31,8 @@ Technique.prototype.newTimer = function(prevTimer) {
 
     if(typeof prevTimer !== 'undefined') {
     	if(prevTimer.name === 'Pomodoro') {
-    		completedPomodoros++;
-    		if(completedPomodoros % 4 == 0) {
+    		this.completedPomodoros++;
+    		if(this.completedPomodoros % 4 == 0) {
     			timer = new Timer(whenTimeup, this.longBreakDurationMins, name="Long Break");
     		}
     		else {
@@ -43,7 +43,7 @@ Technique.prototype.newTimer = function(prevTimer) {
     
     drawStatus();
     drawClock();
-    drawCompleted();
+    drawCompleted(this.completedPomodoros);
 }
 
 function onStart() {
@@ -87,7 +87,7 @@ function drawClock() {
 	  }
 }
 
-function drawCompleted() {
+function drawCompleted(completedPomodoros) {
 	$('#completed').text(completedPomodoros);
 }
 
