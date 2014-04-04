@@ -20,12 +20,12 @@ $(document).ready(function(){
 
 function newTimer(prevTimer) {
 
-	timer = new Timer(whenTimeup, durationInMins=0.03, name="Pomodoro");
+	timer = new Timer(whenTimeup, durationInMins=0.01, name="Pomodoro");
 
     if(typeof prevTimer !== 'undefined') {
     	if(prevTimer.name === 'Pomodoro') {
     		completedPomodoros++;
-    		if(completedPomodoros % 2 == 0) {
+    		if(completedPomodoros % 4 == 0) {
     			timer = new Timer(whenTimeup, durationInMins=0.01, name="Long Break");
     		}
     		else {
