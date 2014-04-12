@@ -1,26 +1,16 @@
 <html>
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script type="text/javascript" src="script.js"></script>
-	<style type="text/css">
-		button {
-			font-size: 2em;
-		}
-		#countdown {
-			font-size: 15em;
-		}
-		#timerName {
-			font-size: 3em;
-		}
-	</style>
+	<script type="text/javascript" src="ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 	<label id="timerName">Pomodoro: Ready</label>
 	<div class="app">
 	  <time id="countdown">25:00</time>
 	</div>
-	<button id="start">Start</button>
-	<button id="stop">Stop</button>
+		<button class='btn' id="start">Start</button>
+		<button class='btn' id="stop">Stop</button>
 	<div id="completedPomodoros">
 		<label>Pomodoros Completed: </label><strong id="completed">0</strong>
 	</div>
