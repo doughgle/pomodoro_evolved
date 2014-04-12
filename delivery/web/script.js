@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
 	
-	technique = new Technique(0.01, 0.01, 0.01); 
+	technique = new Technique(0.05, 0.01, 0.01); 
 	technique.newTimer();
 	
 	$('#start').click(function() {
@@ -45,7 +45,7 @@ Technique.prototype.newTimer = function(prevTimer) {
     drawStatus();
     drawClock();
     drawCompleted(this.completedPomodoros);
-}
+};
 
 function onStart() {
 	drawClock();
