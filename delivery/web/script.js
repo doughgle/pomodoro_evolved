@@ -7,6 +7,7 @@ $(document).ready(function(){
 	$('#start').click(function() {
 		onStart();
 		$("#start").attr("disabled", "disabled");
+		$("#completedPomodoros").fadeOut();
 		console.log("started!")
 	});
 
@@ -95,6 +96,7 @@ function drawClock() {
 
 function drawCompleted(completedPomodoros) {
 	$('#completed').text(completedPomodoros);
+	$("#completedPomodoros").fadeIn();
 }
 
 Timer = function(whenTimeup, durationInMins, name) {
