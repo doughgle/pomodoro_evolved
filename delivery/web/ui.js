@@ -8,13 +8,13 @@ $(document).ready(function(){
 		onStart();
 		$("#start").attr("disabled", "disabled");
 		$("#completedPomodoros").fadeOut();
-		console.log("started!")
+		console.log("started!");
 	});
 
 	$('#stop').click(function() {
 		onStop();
 		$("#start").removeAttr("disabled");
-		console.log("stopped!")
+		console.log("stopped!");
 	});
 	
 });
