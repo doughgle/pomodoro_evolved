@@ -30,3 +30,6 @@
   background-image: linear-gradient(to bottom, #cc2f49, #d9348c);
   text-decoration: none;
 }
+#completedPomodoros {
+	font-size: 2em;
+}
