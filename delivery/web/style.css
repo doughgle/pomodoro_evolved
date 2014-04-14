@@ -4,6 +4,9 @@
 #timerName {
 	font-size: 3em;
 }
+.hide {
+	display: none;
+}
 .btn {
   background: #b90000;
   background-image: -webkit-linear-gradient(top, #b90000, #a00000);
