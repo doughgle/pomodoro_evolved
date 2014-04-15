@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
 	
-	technique = new Technique(0.01, 0.01, 0.01); 
+	technique = new Technique($('#countdown').text(), 0.01, 0.01); 
 	technique.newTimer();
 	
 	$('#start').click(function() {
@@ -14,8 +14,6 @@ $(document).ready(function(){
 	});
 	
 });
-
-
 
 Technique = function(pomodoroDurationMins, shortBreakDurationMins, longBreakDurationMins) {
 	this.pomodoroDurationMins = pomodoroDurationMins;
