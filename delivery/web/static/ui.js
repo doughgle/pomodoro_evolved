@@ -76,6 +76,9 @@ function tick() {
 }
 
 function whenTimeup() {
+	var log = new Log();
+	log.addTimer(timer);
+	log.send();
 	alert("Time's up!");
 	technique.newTimer(timer);
 	showStartButton();
@@ -91,7 +94,7 @@ function drawStatus() {
 }
 
 function drawClock() {
-	  var seconds = timer.durationInSeconds;
+	  var seconds = timer.secondsRemaining;
 	  var minutes = Math.round((seconds - 30)/60);
 	  if(minutes < 10) {
 		  minutes = "0" + minutes;  
@@ -115,6 +118,7 @@ function drawCompleted(completedPomodoros) {
 Timer = function(whenTimeup, durationInMins, name) {
 	this.whenTimeup = whenTimeup;
 	this.durationInSeconds = durationInMins * 60;
+	this.secondsRemaining = this.durationInSeconds;
 	this.name = name;
 };
 
@@ -123,9 +127,9 @@ Timer.prototype.start = function() {
 };
 
 Timer.prototype.tick = function() {
-	if(this.durationInSeconds <= 0) {
+	if(this.secondsRemaining <= 0) {
 		clearInterval(countdownTimer);
 		this.whenTimeup();
 	}
-	else this.durationInSeconds--;
+	else this.secondsRemaining--;
 };
