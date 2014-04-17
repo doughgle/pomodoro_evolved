@@ -6,5 +6,5 @@ Log.prototype.addTimer = function(timer) {
 };
 
 Log.prototype.send = function() {
-	$.post('log/timer', { timer: JSON.stringify(this.timer) });
+	$.post('log/timer', { log: JSON.stringify({timer: this.timer}) });
 };

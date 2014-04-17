@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 import web
 import os
+import json
+import time
 
 urls = (
         '/', 'index',
         '/index.html', 'home',
-        '/log/timer', 'log_timer'
+        '/log/timer', 'LogTimer'
 )
 
 render = web.template.render('templates')
@@ -15,17 +17,18 @@ class index:
     def GET(self):
         return render.system_test()
 
-class log_timer(object):
+class LogTimer(object):
 
     def __init__(self):
         pass
             
     def POST(self):
         log = open('timers.log', 'a')
-        web_storage = web.input()
-        timer_str = str(web_storage).rstrip('>').lstrip('<Storage ') + os.linesep
-        print(timer_str)
-        log.write(timer_str)
+        log_data = web.input()
+        print(log_data.log)
+        timer = json.loads(log_data.log)
+        timer['loggedTime'] = time.strftime("%Y-%m-%dT%H:%M:%S")        
+        log.write(json.dumps(timer) + os.linesep)
         log.close()
         
     def GET(self):
