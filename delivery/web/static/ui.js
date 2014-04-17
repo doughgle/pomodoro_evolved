@@ -123,6 +123,7 @@ Timer = function(whenTimeup, durationInMins, name) {
 };
 
 Timer.prototype.start = function() {
+	this.startTime = new Date()
 	countdownTimer = setInterval('tick()', 1000);
 };
 
