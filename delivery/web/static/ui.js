@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
 	
-	technique = new Technique($('#countdown').text(), 0.01, 0.01); 
+	technique = new Technique($('#countdown').text(), $('#shortBreak').text(), $('#longBreak').text()); 
 	technique.newTimer();
 	
 	$('#start').click(function() {
