@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>Pomodoro Evolved</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+
+		
+		<h3>
+			<label id="timerName">Pomodoro: Ready</label>
+		</h3>
+		<div class="jumbotron">
+			<h1 class="h1" id="countdown">25</h1>
+			<time class='hide' id="shortBreak">5</time>
+			<time class='hide' id="longBreak">15</time>
+			<button class='btn btn-lg btn-success' id="start">Start</button>
+			<button class='btn btn-lg hide' id="stop">Stop</button>
+		</div>
+		<div id="completedPomodoros">
+			<label>Pomodoros Completed: </label><strong id="completed">0</strong>
+		</div>
+	</div>
+
+	<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<script type="text/javascript" src="log.js"></script>
+	<script type="text/javascript" src="ui.js"></script>
+</body>
+</html>
