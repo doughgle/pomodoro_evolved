@@ -13,6 +13,8 @@ $(document).ready(function(){
 		onStop();
 	});
 	
+	showStartButton();
+	
 });
 
 Technique = function(pomodoroDurationMins, shortBreakDurationMins, longBreakDurationMins) {
