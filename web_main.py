@@ -10,12 +10,12 @@ urls = (
         '/log/timer', 'LogTimer'
 )
 
-render = web.template.render('templates')
+render = web.template.render('')
 
 class index:
     
     def GET(self):
-        return render.system_test()
+        return render.index()
 
 class LogTimer(object):
 
