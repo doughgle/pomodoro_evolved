@@ -1,4 +1,4 @@
-$def with (pomodoroDurationMins)
+$def with (pomodoroDurationMins, shortBreakMins, longBreakMins)
 <html>
 <head>
 <title>Pomodoro Evolved</title>
@@ -12,8 +12,8 @@ $def with (pomodoroDurationMins)
 		</h3>
 		<div class="jumbotron">
 			<h1 class="h1 text-center" id="countdown">$pomodoroDurationMins</h1>
-			<time class='hide' id="shortBreak">5</time>
-			<time class='hide' id="longBreak">15</time>
+			<time class='hide' id="shortBreak">$shortBreakMins</time>
+			<time class='hide' id="longBreak">$longBreakMins</time>
 			<button class='btn btn-lg btn-block btn-success' id="start"><span class="glyphicon glyphicon-play"></span></button>
 			<button class='btn btn-lg btn-block btn-danger' id="stop"><span class="glyphicon glyphicon-stop"></span></button>
 		</div>

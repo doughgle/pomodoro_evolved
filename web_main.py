@@ -16,12 +16,12 @@ render = web.template.render('')
 class SystemTest(object):
     
     def GET(self):
-        return render.index(0.01)
+        return render.index(0.01, 0.01, 0.01)
     
 class index:
     
     def GET(self):
-        return render.index(25)
+        return render.index(25, 5, 15)
 
 class LogTimer(object):
 
