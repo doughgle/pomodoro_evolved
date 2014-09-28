@@ -7,15 +7,21 @@ import time
 urls = (
         '/', 'index',
         '/index.html', 'home',
-        '/log/timer', 'LogTimer'
+        '/log/timer', 'LogTimer',
+        '/systest', 'SystemTest'
 )
 
 render = web.template.render('')
 
+class SystemTest(object):
+    
+    def GET(self):
+        return render.index(0.01)
+    
 class index:
     
     def GET(self):
-        return render.index()
+        return render.index(25)
 
 class LogTimer(object):
 
