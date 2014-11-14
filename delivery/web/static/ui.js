@@ -14,7 +14,6 @@ $(document).ready(function(){
 	});
 	
 	showStartButton();
-	
 });
 
 Technique = function(pomodoroDurationMins, shortBreakDurationMins, longBreakDurationMins) {
@@ -57,7 +56,7 @@ function showStopButton() {
 }
 
 function onStop() {
-	if(confirm("Void this " + timer.name + "?")) {
+	if(confirmStopDialog("Void this " + timer.name + "?")) {
 		clearInterval(countdownTimer);
 		technique.newTimer();
 		showStartButton();
@@ -65,6 +64,17 @@ function onStop() {
 	else {
 		
 	}
+}
+
+function confirmStopDialog(msg) {
+	var result = false;
+	swal({  title: msg,
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Yes, void it!" }, 
+			function(){  result = true; });
+	return result;
 }
 
 function showStartButton() {
@@ -81,7 +91,7 @@ function whenTimeup() {
 	var log = new Log();
 	log.addTimer(timer);
 	log.send();
-	alert("Time's up!");
+	sweetAlert("Time's up!");
 	technique.newTimer(timer);
 	showStartButton();
 }
