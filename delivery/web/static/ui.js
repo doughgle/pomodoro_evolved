@@ -1,22 +1,24 @@
+$(document).ready(
+		function() {
 
-$(document).ready(function(){
-	
-	technique = new Technique($('#countdown').text(), $('#shortBreak').text(), $('#longBreak').text()); 
-	technique.newTimer();
-	
-	$('#start').click(function() {
-		onStart();
-		$('#completedPomodoros').fadeOut();
-	});
+			technique = new Technique($('#countdown').text(), $('#shortBreak')
+					.text(), $('#longBreak').text());
+			technique.newTimer();
 
-	$('#stop').click(function() {
-		onStop();
-	});
-	
-	showStartButton();
-});
+			$('#start').click(function() {
+				onStart();
+				$('#completedPomodoros').fadeOut();
+			});
 
-Technique = function(pomodoroDurationMins, shortBreakDurationMins, longBreakDurationMins) {
+			$('#stop').click(function() {
+				onStop();
+			});
+
+			showStartButton();
+		});
+
+Technique = function(pomodoroDurationMins, shortBreakDurationMins,
+		longBreakDurationMins) {
 	this.pomodoroDurationMins = pomodoroDurationMins;
 	this.shortBreakDurationMins = shortBreakDurationMins;
 	this.longBreakDurationMins = longBreakDurationMins;
@@ -25,23 +27,25 @@ Technique = function(pomodoroDurationMins, shortBreakDurationMins, longBreakDura
 
 Technique.prototype.newTimer = function(prevTimer) {
 
-	timer = new Timer(whenTimeup, durationInMins=this.pomodoroDurationMins, name="Pomodoro");
+	timer = new Timer(whenTimeup, durationInMins = this.pomodoroDurationMins,
+			name = "Pomodoro");
 
-    if(typeof prevTimer !== 'undefined') {
-    	if(prevTimer.name === 'Pomodoro') {
-    		this.completedPomodoros++;
-    		if(this.completedPomodoros % 4 == 0) {
-    			timer = new Timer(whenTimeup, this.longBreakDurationMins, name="Long Break");
-    		}
-    		else {
-    			timer = new Timer(whenTimeup, this.shortBreakDurationMins, name="Short Break");    		
-    		}
-    	}
-    }
-    
-    drawStatus();
-    drawClock();
-    drawCompleted(this.completedPomodoros);
+	if (typeof prevTimer !== 'undefined') {
+		if (prevTimer.name === 'Pomodoro') {
+			this.completedPomodoros++;
+			if (this.completedPomodoros % 4 == 0) {
+				timer = new Timer(whenTimeup, this.longBreakDurationMins,
+						name = "Long Break");
+			} else {
+				timer = new Timer(whenTimeup, this.shortBreakDurationMins,
+						name = "Short Break");
+			}
+		}
+	}
+
+	drawStatus();
+	drawClock();
+	drawCompleted(this.completedPomodoros);
 };
 
 function onStart() {
@@ -56,25 +60,21 @@ function showStopButton() {
 }
 
 function onStop() {
-	if(confirmStopDialog("Void this " + timer.name + "?")) {
-		clearInterval(countdownTimer);
-		technique.newTimer();
-		showStartButton();
-	}
-	else {
-		
-	}
+	confirmStopDialog("Void this " + timer.name + "?");
 }
 
 function confirmStopDialog(msg) {
-	var result = false;
-	swal({  title: msg,
-			type: "warning",
-			showCancelButton: true,
-			confirmButtonColor: "#DD6B55",
-			confirmButtonText: "Yes, void it!" }, 
-			function(){  result = true; });
-	return result;
+	swal({
+		title : msg,
+		type : "warning",
+		showCancelButton : true,
+		confirmButtonColor : "#DD6B55",
+		confirmButtonText : "Yes, void it!",
+	}, function() {
+		clearInterval(countdownTimer);
+		technique.newTimer();
+		showStartButton();
+	});
 }
 
 function showStartButton() {
@@ -98,7 +98,7 @@ function whenTimeup() {
 
 function toggleButton(button) {
 	button.hide();
-	button.siblings('button').show();	
+	button.siblings('button').show();
 }
 
 function drawStatus() {
@@ -106,20 +106,21 @@ function drawStatus() {
 }
 
 function drawClock() {
-	  var seconds = timer.secondsRemaining;
-	  var minutes = Math.round((seconds - 30)/60);
-	  if(minutes < 10) {
-		  minutes = "0" + minutes;  
-	  }
-	  var remainingSeconds = Math.ceil(seconds % 60);
-	  if(remainingSeconds < 10) {
-	    remainingSeconds = "0" + remainingSeconds;  
-	  }
-	  document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
+	var seconds = timer.secondsRemaining;
+	var minutes = Math.round((seconds - 30) / 60);
+	if (minutes < 10) {
+		minutes = "0" + minutes;
+	}
+	var remainingSeconds = Math.ceil(seconds % 60);
+	if (remainingSeconds < 10) {
+		remainingSeconds = "0" + remainingSeconds;
+	}
+	document.getElementById('countdown').innerHTML = minutes + ":"
+			+ remainingSeconds;
 
-	  if (seconds <= 0) {
-	    document.getElementById('countdown').innerHTML = "00:00";
-	  }
+	if (seconds <= 0) {
+		document.getElementById('countdown').innerHTML = "00:00";
+	}
 }
 
 function drawCompleted(completedPomodoros) {
@@ -140,9 +141,9 @@ Timer.prototype.start = function() {
 };
 
 Timer.prototype.tick = function() {
-	if(this.secondsRemaining <= 0) {
+	if (this.secondsRemaining <= 0) {
 		clearInterval(countdownTimer);
 		this.whenTimeup();
-	}
-	else this.secondsRemaining--;
+	} else
+		this.secondsRemaining--;
 };
